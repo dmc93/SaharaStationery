@@ -1,0 +1,18 @@
+.cart-item-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.cart-item-row button {
+    background-color: goldenrod;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.cart-item-row button:hover {
+    background-color: #cc9900;
+}
