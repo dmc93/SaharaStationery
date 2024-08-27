@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import CustomAlert from './CustomAlert';
-import { useCart } from './CartContext';
+import { useCart } from './CartContext'; 
 
 function SaveCartButton() {
-    const { cartItems, newCart, setNewCart, clearCart } = useCart();
+    const { cartItems, clearCart } = useCart(); 
     const [showAlert, setShowAlert] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
 
@@ -18,8 +18,7 @@ function SaveCartButton() {
                 const orderId = response.data;  
                 console.log(orderId)
                 setAlertMessage(`Cart successfully saved. Your order ID is ${orderId}.`);
-                
-                setNewCart(orderId);
+                clearCart();
             } else {
                 setAlertMessage('Failed to save cart.');
             }
@@ -28,7 +27,6 @@ function SaveCartButton() {
             setAlertMessage('Failed to save cart.');
         }
         setShowAlert(true);
-        clearCart();
     };
 
     const closeAlert = () => {
