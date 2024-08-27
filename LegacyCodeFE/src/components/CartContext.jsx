@@ -8,9 +8,17 @@ export const CartProvider = ({ children }) => {
         return savedCart ? JSON.parse(savedCart) : [];
     });
 
+    const [isLoaded, setIsLoaded] = useState(() => {
+        return localStorage.getItem('isLoaded') === 'true';
+    });
+
     useEffect(() => {
         localStorage.setItem('cartItems', JSON.stringify(cartItems));
     }, [cartItems]);
+
+    useEffect(() => {
+        localStorage.setItem('isLoaded', isLoaded);
+    }, [isLoaded]);
 
     const addToCart = (item) => {
         setCartItems((prevItems) => {
@@ -39,17 +47,19 @@ export const CartProvider = ({ children }) => {
     const setCart = (cart) => {
         setCartItems(cart);
         localStorage.setItem('cartItems', JSON.stringify(cart));
+        setIsLoaded(true); 
     };
 
     const clearCart = () => {
         setCartItems([]);
         localStorage.removeItem('cartItems');
-        localStorage.removeItem('cartId'); 
-        localStorage.removeItem('isLoaded'); 
+        localStorage.removeItem('cartId');
+        localStorage.removeItem('isLoaded');
+        setIsLoaded(false); 
     };
 
     return (
-        <CartContext.Provider value={{ cartItems, addToCart, updateQuantity, removeFromCart, setCart, clearCart }}>
+        <CartContext.Provider value={{ cartItems, addToCart, updateQuantity, removeFromCart, setCart, clearCart, isLoaded }}>
             {children}
         </CartContext.Provider>
     );
