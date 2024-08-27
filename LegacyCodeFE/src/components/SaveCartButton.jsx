@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import CustomAlert from './CustomAlert';
-import { useCart } from './CartContext'; 
+import { useCart } from './CartContext';
 
 function SaveCartButton() {
     const { cartItems, clearCart, isLoaded } = useCart();
@@ -10,13 +10,30 @@ function SaveCartButton() {
 
     const handleSaveCart = async () => {
         try {
-            const response = await axios.post('http://localhost:8083/cart/add', cartItems, {
-                headers: { 'Content-Type': 'application/json' }
-            });
+            const cartId = localStorage.getItem('cartId'); 
 
-            if (response.status === 201) {
-                const orderId = response.data;  
-                setAlertMessage(`Cart successfully ${isLoaded ? 'updated' : 'saved'}. Your order ID is ${orderId}.`);
+            
+            const cartPayload = {
+                items: cartItems, 
+                status: 'updated' 
+            };
+
+            let response;
+            if (isLoaded && cartId) {
+              
+                response = await axios.patch(`http://localhost:8083/cart/update/${cartId}`, cartPayload, {
+                    headers: { 'Content-Type': 'application/json' }
+                });
+            } else {
+               
+                response = await axios.post('http://localhost:8083/cart/add', cartItems, {
+                    headers: { 'Content-Type': 'application/json' }
+                });
+            }
+
+            if (response.status === (isLoaded ? 200 : 201)) {
+                const orderId = response.data;
+                setAlertMessage(`Cart successfully ${isLoaded ? 'updated' : 'saved'}.`);
                 clearCart(); 
             } else {
                 setAlertMessage(`Failed to ${isLoaded ? 'update' : 'save'} cart.`);
