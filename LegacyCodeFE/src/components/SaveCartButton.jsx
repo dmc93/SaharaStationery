@@ -1,12 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import CustomAlert from './CustomAlert';
-import { useCart } from './CartContext'; 
+import { useCart } from './CartContext';
 
-function SaveCartButton({ isUpdate }) { 
-    const { cartItems, clearCart } = useCart(); 
+function SaveCartButton() {
+    const { cartItems, clearCart } = useCart();
     const [showAlert, setShowAlert] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
+    const [isUpdate, setIsUpdate] = useState(false);
+
+    
+    useEffect(() => {
+        const isCartLoaded = localStorage.getItem('isLoaded') === 'true';
+        setIsUpdate(isCartLoaded);
+    }, []);
 
     const handleSaveCart = async () => {
         try {
@@ -15,10 +22,15 @@ function SaveCartButton({ isUpdate }) {
             });
 
             if (response.status === 201) {
-                const orderId = response.data;  
-                console.log(orderId)
+                const orderId = response.data;
+                console.log(orderId);
                 setAlertMessage(`Cart successfully ${isUpdate ? 'updated' : 'saved'}. Your order ID is ${orderId}.`);
                 clearCart();
+                if (isUpdate) {
+                    
+                    localStorage.removeItem('cartId');
+                    localStorage.removeItem('isLoaded');
+                }
             } else {
                 setAlertMessage(`Failed to ${isUpdate ? 'update' : 'save'} cart.`);
             }

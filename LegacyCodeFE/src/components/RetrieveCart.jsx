@@ -1,13 +1,24 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import CustomAlert from './CustomAlert';
 import { useCart } from './CartContext';
-import { useState } from 'react';
 
 const RetrieveCart = ({ clearInput, inputValue, setInputValue, onRetrieve }) => {
     const { setCart } = useCart(); 
     const [showAlert, setShowAlert] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
+
+  
+    useEffect(() => {
+        const savedCartId = localStorage.getItem('cartId');
+        if (savedCartId) {
+            setInputValue(savedCartId);
+        }
+        const isLoaded = localStorage.getItem('isLoaded') === 'true';
+        if (isLoaded) {
+           
+        }
+    }, [setInputValue]);
 
     const handleRetrieve = async () => {
         try {
@@ -16,6 +27,8 @@ const RetrieveCart = ({ clearInput, inputValue, setInputValue, onRetrieve }) => 
             if (response.status === 200) {
                 console.log(`Cart retrieved. Cart ID: ${inputValue}`);
                 setCart(response.data);
+                localStorage.setItem('cartId', inputValue); 
+                localStorage.setItem('isLoaded', 'true'); 
                 setAlertMessage('Cart successfully retrieved.');
                 clearInput(); 
                 if (onRetrieve) {

@@ -6,7 +6,7 @@ const ClearCartButton = ({ onClear }) => {
     const { clearCart } = useCart();
 
     const handleClearCart = () => {
-        clearCart();
+        clearCart(); 
         if (onClear) {
             onClear(); 
         }
