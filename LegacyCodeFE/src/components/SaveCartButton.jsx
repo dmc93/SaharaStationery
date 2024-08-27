@@ -12,7 +12,6 @@ function SaveCartButton() {
         try {
             const cartId = localStorage.getItem('cartId'); 
 
-            
             const cartPayload = {
                 items: cartItems, 
                 status: 'updated' 
@@ -20,20 +19,27 @@ function SaveCartButton() {
 
             let response;
             if (isLoaded && cartId) {
-              
+               
                 response = await axios.patch(`http://localhost:8083/cart/update/${cartId}`, cartPayload, {
                     headers: { 'Content-Type': 'application/json' }
                 });
             } else {
-               
+             
                 response = await axios.post('http://localhost:8083/cart/add', cartItems, {
                     headers: { 'Content-Type': 'application/json' }
                 });
             }
 
             if (response.status === (isLoaded ? 200 : 201)) {
+          
                 const orderId = response.data;
-                setAlertMessage(`Cart successfully ${isLoaded ? 'updated' : 'saved'}.`);
+                if (isLoaded) {
+                  
+                    setAlertMessage('Cart successfully updated.');
+                } else {
+                   
+                    setAlertMessage(`Cart successfully saved. Your order ID is ${orderId}.`);
+                }
                 clearCart(); 
             } else {
                 setAlertMessage(`Failed to ${isLoaded ? 'update' : 'save'} cart.`);
