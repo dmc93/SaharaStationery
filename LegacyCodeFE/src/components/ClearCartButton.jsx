@@ -8,7 +8,7 @@ const ClearCartButton = ({ onClear }) => {
     const handleClearCart = () => {
         clearCart();
         if (onClear) {
-            onClear(); // Call the onClear function to clear additional fields
+            onClear(); 
         }
     };
 

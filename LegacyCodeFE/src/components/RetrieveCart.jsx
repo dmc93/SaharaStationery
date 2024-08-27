@@ -1,22 +1,23 @@
-import React, { useState } from 'react';
+import React from 'react';
 import axios from 'axios';
 import CustomAlert from './CustomAlert';
 import { useCart } from './CartContext';
+import { useState } from 'react';
 
-const RetrieveCart = () => {
+const RetrieveCart = ({ clearInput, inputValue, setInputValue }) => {
     const { setCart } = useCart(); 
-    const [cartId, setCartId] = useState('');
     const [showAlert, setShowAlert] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
 
     const handleRetrieve = async () => {
         try {
-            console.log(`Requesting cart from URL: http://localhost:8083/cart/${cartId}`);
-            const response = await axios.get(`http://localhost:8083/cart/${cartId}`);
+            console.log(`Requesting cart from URL: http://localhost:8083/cart/${inputValue}`);
+            const response = await axios.get(`http://localhost:8083/cart/${inputValue}`);
             if (response.status === 200) {
-                console.log(`Cart retrieved. Cart ID: ${cartId}`);
+                console.log(`Cart retrieved. Cart ID: ${inputValue}`);
                 setCart(response.data);
                 setAlertMessage('Cart successfully retrieved.');
+                clearInput(); 
             } else {
                 setAlertMessage('Failed to retrieve cart.');
             }
@@ -36,11 +37,8 @@ const RetrieveCart = () => {
             <input
                 type="text"
                 placeholder="Enter Cart ID"
-                value={cartId}
-                onChange={(e) => {
-                    setCartId(e.target.value);
-                    console.log(`Cart ID set to: ${e.target.value}`);
-                }}
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
             />
             <button className="retrieve-cart-btn" onClick={handleRetrieve}>Retrieve Cart</button>
             {showAlert && <CustomAlert message={alertMessage} onClose={closeAlert} />}

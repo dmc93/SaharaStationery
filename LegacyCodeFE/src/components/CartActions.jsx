@@ -4,22 +4,16 @@ import CheckoutButton from './CheckoutButton';
 import RetrieveCart from './RetrieveCart';
 import ClearCartButton from './ClearCartButton';
 import '../CSS/CartActions.css';
-import { useCart } from './CartContext'; // Import useCart
+import { useCart } from './CartContext';
 
-const CartActions = ({ onRetrieve }) => {
-    const { clearCart } = useCart(); // Use useCart to get clearCart function
-    const [inputValue, setInputValue] = useState(''); // State for the input field
+const CartActions = () => {
+    const { clearCart } = useCart(); 
+    const [inputValue, setInputValue] = useState(''); 
 
-    const handleInputChange = (event) => {
-        setInputValue(event.target.value);
-    };
-
+ 
     const clearAll = () => {
-        // Clear the cart
         clearCart();
-
-        // Clear the input field
-        setInputValue('');
+        setInputValue(''); 
     };
 
     return (
@@ -30,9 +24,12 @@ const CartActions = ({ onRetrieve }) => {
                 <ClearCartButton className="clear-cart-btn" onClear={clearAll} />
             </div>
             <div className="retrieve-cart">
-                <RetrieveCart onRetrieve={onRetrieve} />
+                <RetrieveCart 
+                    clearInput={() => setInputValue('')} 
+                    inputValue={inputValue}
+                    setInputValue={setInputValue}
+                />
             </div>
-    
         </>
     );
 };
