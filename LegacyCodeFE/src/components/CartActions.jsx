@@ -7,25 +7,31 @@ import '../CSS/CartActions.css';
 import { useCart } from './CartContext';
 
 const CartActions = () => {
-    const { clearCart } = useCart(); 
+    const { clearCart } = useCart();
     const [inputValue, setInputValue] = useState(''); 
+    const [cartLoaded, setCartLoaded] = useState(false); 
 
- 
     const clearAll = () => {
         clearCart();
         setInputValue(''); 
+        setCartLoaded(false);  
+    };
+
+    const handleCartRetrieve = () => {
+        setCartLoaded(true);  
     };
 
     return (
         <>
             <div className="button-container">
-                <SaveCartButton className="save-cart-btn" />
+                <SaveCartButton className="save-cart-btn" isUpdate={cartLoaded} /> 
                 <CheckoutButton className="checkout-btn" />
                 <ClearCartButton className="clear-cart-btn" onClear={clearAll} />
             </div>
             <div className="retrieve-cart">
                 <RetrieveCart 
                     clearInput={() => setInputValue('')} 
+                    onRetrieve={handleCartRetrieve} 
                     inputValue={inputValue}
                     setInputValue={setInputValue}
                 />

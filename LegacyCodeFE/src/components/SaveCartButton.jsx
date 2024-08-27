@@ -3,7 +3,7 @@ import axios from 'axios';
 import CustomAlert from './CustomAlert';
 import { useCart } from './CartContext'; 
 
-function SaveCartButton() {
+function SaveCartButton({ isUpdate }) { 
     const { cartItems, clearCart } = useCart(); 
     const [showAlert, setShowAlert] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
@@ -17,14 +17,14 @@ function SaveCartButton() {
             if (response.status === 201) {
                 const orderId = response.data;  
                 console.log(orderId)
-                setAlertMessage(`Cart successfully saved. Your order ID is ${orderId}.`);
+                setAlertMessage(`Cart successfully ${isUpdate ? 'updated' : 'saved'}. Your order ID is ${orderId}.`);
                 clearCart();
             } else {
-                setAlertMessage('Failed to save cart.');
+                setAlertMessage(`Failed to ${isUpdate ? 'update' : 'save'} cart.`);
             }
         } catch (error) {
-            console.error('Error saving cart:', error);
-            setAlertMessage('Failed to save cart.');
+            console.error(`Error ${isUpdate ? 'updating' : 'saving'} cart:`, error);
+            setAlertMessage(`Failed to ${isUpdate ? 'update' : 'save'} cart.`);
         }
         setShowAlert(true);
     };
@@ -35,10 +35,12 @@ function SaveCartButton() {
 
     return (
         <div>
-            <button className="save-cart-btn" onClick={handleSaveCart}>Save Cart</button>
+            <button className="save-cart-btn" onClick={handleSaveCart}>
+                {isUpdate ? 'Update Cart' : 'Save Cart'}
+            </button>
             {showAlert && <CustomAlert message={alertMessage} onClose={closeAlert} />}
         </div>
     );
-};
+}
 
 export default SaveCartButton;

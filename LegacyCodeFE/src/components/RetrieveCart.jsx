@@ -4,7 +4,7 @@ import CustomAlert from './CustomAlert';
 import { useCart } from './CartContext';
 import { useState } from 'react';
 
-const RetrieveCart = ({ clearInput, inputValue, setInputValue }) => {
+const RetrieveCart = ({ clearInput, inputValue, setInputValue, onRetrieve }) => {
     const { setCart } = useCart(); 
     const [showAlert, setShowAlert] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
@@ -18,6 +18,9 @@ const RetrieveCart = ({ clearInput, inputValue, setInputValue }) => {
                 setCart(response.data);
                 setAlertMessage('Cart successfully retrieved.');
                 clearInput(); 
+                if (onRetrieve) {
+                    onRetrieve(response.data); 
+                }
             } else {
                 setAlertMessage('Failed to retrieve cart.');
             }
