@@ -14,19 +14,30 @@ function CheckoutButton() {
             let isInsufficient = false;
             let updatePromises = [];
 
-                    const itemIds = cartItems.map(item => item.id);
+           
+            const cartItemsWithStringIds = cartItems.map(item => ({
+                ...item,
+                id: String(item.id)
+            }));
+
+          
+            const itemIds = cartItemsWithStringIds.map(item => item.id);
             const itemResponse = await axios.post('http://localhost:8082/items/getByIds', itemIds, {
                 headers: { 'Content-Type': 'application/json' }
             });
 
-            const itemDataList = itemResponse.data;
+   
+            const itemDataList = itemResponse.data.map(item => ({
+                ...item,
+                id: String(item.id)
+            }));
 
-          
+         
             console.log('Fetched item data:', itemDataList);
-            console.log('Cart items:', cartItems);
+            console.log('Cart items:', cartItemsWithStringIds);
 
           
-            for (let item of cartItems) {
+            for (let item of cartItemsWithStringIds) {
                 const itemData = itemDataList.find(data => data.id === item.id);
                 console.log(`Processing item ID ${item.id}:`, itemData);
                 if (itemData) {
@@ -53,7 +64,7 @@ function CheckoutButton() {
             if (!checkoutId) {
               
                 const response = await axios.post('http://localhost:8083/cart/add', {
-                    items: cartItems,
+                    items: cartItemsWithStringIds, 
                     status: 'Completed'
                 }, {
                     headers: { 'Content-Type': 'application/json' }
@@ -78,7 +89,7 @@ function CheckoutButton() {
             if (statusResponse.status === 200) {
                 console.log('Cart status updated to Completed');
 
-             
+               
                 if (updatePromises.length > 0) {
                     console.log('Item quantity updates:', updatePromises);
                     const updatePromisesQuantity = updatePromises.map(item =>
@@ -97,7 +108,7 @@ function CheckoutButton() {
                     console.log('No item quantity updates to process');
                 }
 
-                setAlertMessage('Checkout complete!');
+                setAlertMessage(`Checkout complete! Your order ID is ${checkoutId}`);
                 clearCart();
                 localStorage.removeItem('cartId'); 
             } else {
