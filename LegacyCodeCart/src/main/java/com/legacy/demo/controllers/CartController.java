@@ -1,6 +1,7 @@
 package com.legacy.demo.controllers;
 
 import com.legacy.demo.classes.CartItemData;
+import com.legacy.demo.dtos.CartDTO;
 import com.legacy.demo.entities.Cart;
 import com.legacy.demo.services.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,21 +30,18 @@ public class CartController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<String> addItems(@RequestBody List<CartItemData> items) {
-        String cartId = cartService.createCartWithItems(items);
+    public ResponseEntity<String> addItems(@RequestBody CartDTO cartDTO) {
+        String cartId = cartService.createCartWithItems(cartDTO.getItems(), cartDTO.getStatus());
         return new ResponseEntity<>(cartId, HttpStatus.CREATED);
     }
 
     @PatchMapping("/update/{cartId}")
     public ResponseEntity<?> updateCart(@PathVariable String cartId,
-                                         @RequestBody Cart updateRequest){
+                                        @RequestBody CartDTO cartDTO){
         return this.cartService.updateCart(
                 cartId,
-                updateRequest.getItems(),
-                updateRequest.getStatus()
+                cartDTO.getItems(),
+                cartDTO.getStatus()
         );
     }
-
-
-
 }

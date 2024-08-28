@@ -18,24 +18,19 @@ public class CartService {
     private CartRepository cartRepository;
 
     private static final int ID_LENGTH = 6;
-    private static final Set<String> generatedIds = new HashSet<>(); // Track generated IDs to ensure uniqueness
+    private static final Set<String> generatedIds = new HashSet<>();
     private static final Random random = new Random();
 
-
     @Transactional
-    public String createCartWithItems(List<CartItemData> items) {
-
+    public String createCartWithItems(List<CartItemData> items, String status) {
         String cartId = generateOrderId();
-
         Cart cart = new Cart();
         cart.setCartId(cartId);
         cart.setItems(items);
-        cart.setStatus("in progress");
-
+        cart.setStatus(status); // Set provided status
         cartRepository.save(cart);
         return cartId;
     }
-
 
     public List<CartItemData> getCart(String cartId) {
         return cartRepository.findById(cartId)
@@ -46,26 +41,23 @@ public class CartService {
     private String generateOrderId() {
         String orderId;
         do {
-            orderId = String.format("%06d", random.nextInt(1000000)); // Generates a 6-digit number
-        } while (generatedIds.contains(orderId)); // Ensure uniqueness
-        generatedIds.add(orderId); // Add the new ID to the set
+            orderId = String.format("%06d", random.nextInt(1000000));
+        } while (generatedIds.contains(orderId));
+        generatedIds.add(orderId);
         return orderId;
     }
 
-    public ResponseEntity<?> updateCart(String cartId,
-                                        List<CartItemData> items,
-                                        String status){
-        Optional<Cart> found = this.cartRepository.findByCartId(cartId);
-        if (found.isEmpty()){
+    public ResponseEntity<?> updateCart(String cartId, List<CartItemData> items, String status) {
+        Optional<Cart> found = cartRepository.findByCartId(cartId);
+        if (found.isEmpty()) {
             return new ResponseEntity<>("No Cart found with ID " + cartId, HttpStatus.NOT_FOUND);
         }
 
         Cart toUpdate = found.get();
-
         if (items != null) toUpdate.setItems(items);
         if (status != null) toUpdate.setStatus(status);
 
-        Cart updated = this.cartRepository.save(toUpdate);
+        Cart updated = cartRepository.save(toUpdate);
         return ResponseEntity.ok(updated);
     }
 }

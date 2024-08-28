@@ -17,8 +17,10 @@ public class Cart {
     @ElementCollection
     @CollectionTable(name = "cart_items", joinColumns = @JoinColumn(name = "cart_id"))
     private List<CartItemData> items;
+
     private String status;
 
+    // Getters and Setters
 
     public String getCartId() {
         return cartId;

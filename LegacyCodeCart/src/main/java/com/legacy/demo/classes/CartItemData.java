@@ -10,6 +10,7 @@ public class CartItemData {
     private double price;
     private int quantity;
 
+    // Getters and Setters
 
     public String getId() {
         return id;
