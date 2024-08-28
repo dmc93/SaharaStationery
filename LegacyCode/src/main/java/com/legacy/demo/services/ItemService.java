@@ -6,6 +6,7 @@ import com.legacy.demo.dtos.ItemDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -34,6 +35,15 @@ public class ItemService {
             return new ResponseEntity<>("No Item found with id " + id, HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(new ItemDto(found.get()));
+    }
+
+    public ResponseEntity<List<ItemDto>> getItemsByIds(List<Integer> ids) {
+        List<Item> items = (List<Item>) this.repo.findAllById(ids); // Use findAllById
+        List<ItemDto> itemDtos = new ArrayList<>();
+        for (Item item : items) {
+            itemDtos.add(new ItemDto(item));
+        }
+        return ResponseEntity.ok(itemDtos);
     }
 
     public ResponseEntity<ItemDto> addItem(Item newItem) {

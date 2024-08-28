@@ -20,13 +20,19 @@ public class ItemController {
     }
 
     @GetMapping("/items/getAll")
-    public List<ItemDto> getAll() {
-        return this.service.getAll();
+    public ResponseEntity<List<ItemDto>> getAll() {
+        List<ItemDto> items = this.service.getAll();
+        return ResponseEntity.ok(items);
     }
 
     @GetMapping("/items/get/{id}")
     public ResponseEntity<?> getItem(@PathVariable Integer id) {
         return this.service.getItem(id);
+    }
+
+    @PostMapping("/items/getByIds")
+    public ResponseEntity<List<ItemDto>> getItemsByIds(@RequestBody List<Integer> ids) {
+        return this.service.getItemsByIds(ids);
     }
 
     @PostMapping("/item/add")
@@ -48,7 +54,7 @@ public class ItemController {
                 itemUpdate.getPrice(),
                 itemUpdate.getQuantity(),
                 itemUpdate.getImageUrl(),
-                itemUpdate.getCategory() // Added category to the update parameters
+                itemUpdate.getCategory()
         );
     }
 }
