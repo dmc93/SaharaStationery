@@ -9,19 +9,12 @@ function CheckoutButton() {
     const [alertMessage, setAlertMessage] = useState('');
 
     const handleCheckout = async () => {
-        if (!isLoaded) {
-            console.log("Cart is not loaded");
-            setAlertMessage("Cart is not loaded properly.");
-            setShowAlert(true);
-            return;
-        }
-
         try {
             let checkoutId = localStorage.getItem('cartId');
 
             if (!checkoutId) {
-                console.log("No existing cart ID, creating a new cart...");
-                const response = await axios.post('http://localhost:8083/cart/add', cartItems, {
+               
+                const response = await axios.post('http://localhost:8083/cart/add', { items: cartItems, status: 'Completed' }, {
                     headers: { 'Content-Type': 'application/json' }
                 });
 
@@ -29,26 +22,28 @@ function CheckoutButton() {
                     checkoutId = response.data;
                     console.log(`Cart created with ID: ${checkoutId}`);
                     localStorage.setItem('cartId', checkoutId);
-                    setCart(cartItems); 
+                    setCart(cartItems);
                 } else {
-                    console.log("Failed to create a new cart");
                     setAlertMessage("Failed to create a new cart. Please try again.");
                     setShowAlert(true);
                     return;
                 }
             }
 
-            console.log(`Updating cart status to "Completed" for ID: ${checkoutId}`);
+            
             const response = await axios.patch(`http://localhost:8083/cart/update/${checkoutId}`, {
                 status: "Completed"
             });
 
             if (response.status === 200) {
-                console.log('Cart status updated to "Completed"');
-                setAlertMessage('Checkout complete!');
+                if (!isLoaded) {
+                   
+                    setAlertMessage(`Checkout complete! Your new order ID is ${checkoutId}.`);
+                } else {
+                    setAlertMessage('Checkout complete!');
+                }
                 clearCart();
             } else {
-                console.log("Failed to update cart status");
                 setAlertMessage("Failed to complete checkout. Please try again.");
             }
             setShowAlert(true);

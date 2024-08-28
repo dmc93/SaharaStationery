@@ -11,42 +11,45 @@ function SaveCartButton() {
     const handleSaveCart = async () => {
         try {
             const cartId = localStorage.getItem('cartId');
-    
-                        const cartPayload = {
-                items: cartItems,  
-                status: 'in progress'
+
+            const cartPayload = {
+                items: cartItems,
+                status: isLoaded ? 'in progress' : 'in progress' 
             };
-    
+
             let response;
             if (isLoaded && cartId) {
+                
                 response = await axios.patch(`http://localhost:8083/cart/update/${cartId}`, cartPayload, {
                     headers: { 'Content-Type': 'application/json' }
                 });
+                if (response.status === 200) {
+                    setAlertMessage('Cart successfully updated.');
+                } else {
+                    setAlertMessage('Failed to update cart.');
+                }
             } else {
+               
                 response = await axios.post('http://localhost:8083/cart/add', cartPayload, {
                     headers: { 'Content-Type': 'application/json' }
                 });
-            }
-    
-            if (response.status === (isLoaded ? 200 : 201)) {
-                const orderId = response.data;
-                if (isLoaded) {
-                    setAlertMessage('Cart successfully updated.');
+                if (response.status === 201) {
+                    const newCartId = response.data;
+                    localStorage.setItem('cartId', newCartId);
+                    setAlertMessage(`Cart successfully saved. Your order ID is ${newCartId}.`);
                 } else {
-                    setAlertMessage(`Cart successfully saved. Your order ID is ${orderId}.`);
+                    setAlertMessage('Failed to save cart.');
                 }
-                clearCart();
-            } else {
-                setAlertMessage(`Failed to ${isLoaded ? 'update' : 'save'} cart.`);
             }
+
+            clearCart();
+            setShowAlert(true);
         } catch (error) {
             console.error(`Error ${isLoaded ? 'updating' : 'saving'} cart:`, error);
             setAlertMessage(`Failed to ${isLoaded ? 'update' : 'save'} cart.`);
+            setShowAlert(true);
         }
-        setShowAlert(true);
     };
-    
-    
 
     const closeAlert = () => {
         setShowAlert(false);
