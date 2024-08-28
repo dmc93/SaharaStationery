@@ -13,27 +13,42 @@ import java.util.List;
 @RestController
 public class ItemController {
 
-    private ItemService service;
+    private final ItemService service;
 
-    public ItemController(ItemService service) { this.service = service;}
+    public ItemController(ItemService service) {
+        this.service = service;
+    }
 
     @GetMapping("/items/getAll")
-    public List<ItemDto> getAll() {return this.service.getAll();}
+    public List<ItemDto> getAll() {
+        return this.service.getAll();
+    }
 
     @GetMapping("/items/get/{id}")
-    public ResponseEntity<?> getItem(@PathVariable Integer id) {return this.service.getItem(id);}
+    public ResponseEntity<?> getItem(@PathVariable Integer id) {
+        return this.service.getItem(id);
+    }
 
     @PostMapping("/item/add")
-    public ResponseEntity<?> addItem(@RequestBody Item item){
+    public ResponseEntity<?> addItem(@RequestBody Item item) {
         return this.service.addItem(item);
     }
+
     @DeleteMapping("/item/remove/{id}")
-    public ResponseEntity<?> removeItem(@PathVariable Integer id){
+    public ResponseEntity<?> removeItem(@PathVariable Integer id) {
         return this.service.removeItem(id);
     }
-    @PatchMapping("item/update/{id}")
+
+    @PatchMapping("/item/update/{id}")
     public ResponseEntity<?> updateItem(@PathVariable Integer id,
-                                        @RequestBody Item ItemUpdate){
-        return this.service.ItemUpdate(id, ItemUpdate.getName(), ItemUpdate.getPrice(), ItemUpdate.getQuantity(), ItemUpdate.getImageUrl());
+                                        @RequestBody Item itemUpdate) {
+        return this.service.itemUpdate(
+                id,
+                itemUpdate.getName(),
+                itemUpdate.getPrice(),
+                itemUpdate.getQuantity(),
+                itemUpdate.getImageUrl(),
+                itemUpdate.getCategory() // Added category to the update parameters
+        );
     }
 }

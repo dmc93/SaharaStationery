@@ -18,6 +18,7 @@ const ItemList = ({ items }) => {
                         price={item.price}
                         imageUrl={item.imageUrl}
                         quantity={item.quantity}
+                        category={item.category}
                     />
                 ))
             ) : (

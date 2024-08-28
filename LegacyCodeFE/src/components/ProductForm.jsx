@@ -5,6 +5,10 @@ const ProductForm = ({
   onChange,
   onSubmit,
   onCancel,
+  categories = [], // Array of existing categories
+  onCategoryChange, // Function to handle category selection
+  newCategory, // State for new category input
+  onNewCategoryChange, // Function to handle new category input
   isUpdateMode = false
 }) => {
   const handlePriceChange = (e) => {
@@ -70,6 +74,33 @@ const ProductForm = ({
           value={formData.imageUrl}
           onChange={(e) => onChange({ ...formData, imageUrl: e.target.value })}
           required
+        />
+      </div>
+
+      <div className="form-group">
+        <label className="label1">Category:</label>
+        <select
+          className="input1"
+          value={formData.category}
+          onChange={onCategoryChange}
+        >
+          <option value="">Select existing category</option>
+          {categories.map((category, index) => (
+            <option key={index} value={category}>
+              {category}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div className="form-group">
+        <label className="label1">Or Add New Category:</label>
+        <input
+          className="input1"
+          type="text"
+          value={newCategory}
+          onChange={onNewCategoryChange}
+          placeholder="Enter new category"
         />
       </div>
 

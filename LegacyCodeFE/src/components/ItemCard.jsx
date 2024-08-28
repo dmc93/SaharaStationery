@@ -3,7 +3,7 @@ import { useCart } from './CartContext';
 import { useNavigate } from 'react-router-dom';
 import CustomAlert from '../components/CustomAlert';
 
-const ItemCard = ({ id, name, price, imageUrl, quantity }) => {
+const ItemCard = ({ id, name, price, imageUrl, quantity, category }) => {
     const [inputQuantity, setInputQuantity] = useState(1);
     const { cartItems, addToCart } = useCart();
     const navigate = useNavigate(); 
@@ -44,6 +44,7 @@ const ItemCard = ({ id, name, price, imageUrl, quantity }) => {
         <div className="card">
             <h2>{name}</h2>
             <h3>£{price?.toFixed(2)}</h3>
+            <p>Category: {category}</p>
             <img className="card-image" src={imageUrl} alt={name} height={"50px"} />
             <br />
             <p className="stock-info">Amount Available: {quantity}</p>

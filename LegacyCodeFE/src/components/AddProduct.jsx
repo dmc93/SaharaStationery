@@ -12,15 +12,30 @@ const AddProduct = ({ onAddProduct }) => {
     name: '',
     price: '',
     quantity: '',
-    imageUrl: ''
+    imageUrl: '',
+    category: ''
   });
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(true);
+  const [newCategory, setNewCategory] = useState('');
 
- 
-  const { items: existingProducts, error } = useFetchItems();
+  const { items: existingProducts, error, refetch } = useFetchItems(); // Added refetch
+  const [categories, setCategories] = useState([]);
+
+  // Function to update categories based on existing products
+  const updateCategories = (products) => {
+    const uniqueCategories = [...new Set(products.map(item => item.category))];
+    setCategories(uniqueCategories);
+  };
+
+  // Fetch categories each time the modal opens
+  const handleOpenModal = async () => {
+    await refetch(); // Refetch the items to get the latest products, including the newly added one
+    updateCategories(existingProducts); // Update categories after refetching
+    setIsModalOpen(true);
+  };
 
   useEffect(() => {
     if (error) {
@@ -30,32 +45,43 @@ const AddProduct = ({ onAddProduct }) => {
     }
   }, [error]);
 
+  const handleCategoryChange = (e) => {
+    setFormData({ ...formData, category: e.target.value });
+  };
+
+  const handleNewCategoryChange = (e) => {
+    setNewCategory(e.target.value);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!formData.name || !formData.price || !formData.quantity || !formData.imageUrl) {
+    if (!formData.name || !formData.price || !formData.quantity || !formData.imageUrl || (!formData.category && !newCategory)) {
       setAlertMessage('All fields are required.');
       setIsModalVisible(false); 
       setShowAlert(true);
       return;
     }
 
+    const categoryToSubmit = newCategory ? newCategory : formData.category;
+
     const productExists = existingProducts.some(p => p.name.toLowerCase() === formData.name.toLowerCase());
 
-if (productExists) {
-  setAlertMessage('Product already exists. Please enter a different product.');
-  setIsModalVisible(false); 
-  setShowAlert(true);
-  return;
-}
-
+    if (productExists) {
+      setAlertMessage('Product already exists. Please enter a different product.');
+      setIsModalVisible(false); 
+      setShowAlert(true);
+      return;
+    }
 
     try {
       const postResponse = await axios.post('http://localhost:8082/item/add', {
         ...formData,
+        category: categoryToSubmit,
         price: parseFloat(formData.price).toFixed(2),
         quantity: parseInt(formData.quantity, 10)
       });
+
       const data = postResponse.data;
       setAlertMessage(`New Product Added. Your Unique ID is ${data.id}`);
       setShowAlert(true);
@@ -63,8 +89,13 @@ if (productExists) {
         name: '',
         price: '',
         quantity: '',
-        imageUrl: ''
+        imageUrl: '',
+        category: ''
       });
+      setNewCategory('');
+      
+      await refetch(); // Refetch the items to update the products list after adding a new product
+      updateCategories(existingProducts); // Update the categories based on the latest products
       onAddProduct();
       setIsModalOpen(false);
     } catch (error) {
@@ -81,7 +112,7 @@ if (productExists) {
 
   return (
     <div>
-      <button onClick={() => setIsModalOpen(true)} className="addproduct-btn">Add Product</button>
+      <button onClick={handleOpenModal} className="addproduct-btn">Add Product</button>
 
       {isModalOpen && isModalVisible && (
         <Modal
@@ -98,6 +129,10 @@ if (productExists) {
             onChange={setFormData}
             onSubmit={handleSubmit}
             onCancel={() => setIsModalOpen(false)}
+            categories={categories} // Pass categories to the ProductForm
+            onCategoryChange={handleCategoryChange}
+            newCategory={newCategory}
+            onNewCategoryChange={handleNewCategoryChange}
           />
         </Modal>
       )}
