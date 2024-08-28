@@ -45,6 +45,15 @@ const AddProduct = ({ onAddProduct }) => {
     }
   }, [error]);
 
+  useEffect(() => {
+    if (newCategory) {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        category: '' // Reset category dropdown if new category is provided
+      }));
+    }
+  }, [newCategory]);
+
   const handleCategoryChange = (e) => {
     setFormData({ ...formData, category: e.target.value });
   };

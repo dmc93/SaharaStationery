@@ -13,11 +13,29 @@ const UpdateProduct = ({ product, onCancel, onUpdateSuccess }) => {
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [isModalVisible, setIsModalVisible] = useState(true);
+  const [newCategory, setNewCategory] = useState(''); // State for new category
   const { items: existingProducts, error } = useFetchItems();
 
   useEffect(() => {
     setFormData({ ...product });
   }, [product]);
+
+  const handleCategoryChange = (e) => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      category: e.target.value,
+    }));
+  };
+
+  const handleNewCategoryChange = (e) => {
+    setNewCategory(e.target.value);
+    if (e.target.value) {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        category: e.target.value,
+      }));
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,18 +47,16 @@ const UpdateProduct = ({ product, onCancel, onUpdateSuccess }) => {
       return;
     }
 
-  
     const productNameExists = existingProducts.some(p => 
       p.name.toLowerCase() === formData.name.toLowerCase() && p.id !== formData.id
     );
-    
+
     if (productNameExists) {
       setAlertMessage('Product name already exists. Please choose a different name.');
       setShowAlert(true);
       setIsModalVisible(false); 
       return;
     }
-    
 
     try {
       const response = await axios.patch(`http://localhost:8082/item/update/${formData.id}`, formData);
@@ -84,6 +100,10 @@ const UpdateProduct = ({ product, onCancel, onUpdateSuccess }) => {
             onChange={setFormData}
             onSubmit={handleSubmit}
             onCancel={onCancel}
+            categories={existingProducts.map(product => product.category).filter((category, index, self) => self.indexOf(category) === index)} // Pass unique categories
+            onCategoryChange={handleCategoryChange}
+            newCategory={newCategory}
+            onNewCategoryChange={handleNewCategoryChange}
             isUpdateMode={true}
           />
         </Modal>

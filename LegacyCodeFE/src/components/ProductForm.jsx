@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 const ProductForm = ({
   formData,
@@ -11,6 +11,14 @@ const ProductForm = ({
   onNewCategoryChange, // Function to handle new category input
   isUpdateMode = false
 }) => {
+
+  useEffect(() => {
+    // If the new category field has a value, reset the category dropdown
+    if (newCategory) {
+      onCategoryChange({ target: { value: '' } });
+    }
+  }, [newCategory, onCategoryChange]);
+
   const handlePriceChange = (e) => {
     let value = e.target.value;
     if (/^\d*\.?\d{0,2}$/.test(value)) {
@@ -83,6 +91,7 @@ const ProductForm = ({
           className="input1"
           value={formData.category}
           onChange={onCategoryChange}
+          disabled={newCategory !== ''} // Disable dropdown if new category is provided
         >
           <option value="">Select existing category</option>
           {categories.map((category, index) => (
