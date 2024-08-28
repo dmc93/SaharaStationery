@@ -29,6 +29,7 @@ const ProductListTable = ({ products, onUpdate, onDelete }) => {
                     <tr>
                         <th onClick={() => onRequestSort('id')}>Product ID</th>
                         <th onClick={() => onRequestSort('name')}>Product Name</th>
+                        <th onClick={() => onRequestSort('category')}>Product Category</th>
                         <th onClick={() => onRequestSort('price')}>Price</th>
                         <th onClick={() => onRequestSort('quantity')}>Quantity</th>
                         <th>Image</th>
@@ -41,6 +42,7 @@ const ProductListTable = ({ products, onUpdate, onDelete }) => {
                         <tr key={product.id}>
                             <td>{product.id}</td>
                             <td>{product.name}</td>
+                            <td>{product.category}</td>
                             <td>£{product.price.toFixed(2)}</td>
                             <td>{product.quantity}</td>
                             <td>
