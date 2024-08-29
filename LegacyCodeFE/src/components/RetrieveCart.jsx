@@ -29,6 +29,7 @@ const RetrieveCart = ({ clearInput, inputValue, setInputValue, onRetrieve }) => 
                 setCart(items);
                 localStorage.setItem('cartId', inputValue);
                 localStorage.setItem('isLoaded', 'true');
+                localStorage.setItem('cartStatus', status); 
 
                 if (status === 'Completed') {
                     setAlertMessage('Cart successfully retrieved and is completed.');
