@@ -2,20 +2,14 @@ import React, { useState } from 'react';
 import SaveCartButton from './SaveCartButton';
 import CheckoutButton from './CheckoutButton';
 import RetrieveCart from './RetrieveCart';
-import ClearCartButton from './ClearCartButton';
+import StartNewCart from './StartNewCart'; 
 import '../CSS/CartActions.css';
 import { useCart } from './CartContext';
 
 const CartActions = () => {
     const { clearCart } = useCart();
     const [inputValue, setInputValue] = useState(''); 
-    const [cartLoaded, setCartLoaded] = useState(false); 
-
-    const clearAll = () => {
-        clearCart();
-        setInputValue(''); 
-        setCartLoaded(false);  
-    };
+    const [cartLoaded, setCartLoaded] = useState(false);  
 
     const handleCartRetrieve = () => {
         setCartLoaded(true);  
@@ -25,8 +19,8 @@ const CartActions = () => {
         <>
             <div className="button-container">
                 <SaveCartButton className="save-cart-btn" isUpdate={cartLoaded} /> 
-                <CheckoutButton className="checkout-btn" />
-                <ClearCartButton className="clear-cart-btn" onClear={clearAll} />
+                <CheckoutButton className="checkout-btn" />              
+                <StartNewCart className="new-cart-btn" clearCart={clearCart} />
             </div>
             <div className="retrieve-cart">
                 <RetrieveCart 

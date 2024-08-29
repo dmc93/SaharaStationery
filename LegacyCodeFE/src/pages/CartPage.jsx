@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useCart } from '../components/CartContext';
 import useFetchItems from '../components/FetchItems';
 import CartTable from '../components/CartTable';
+import StartNewCart from '../components/StartNewCart';
 import { useNavigate } from 'react-router-dom';
 
 const CartPage = () => {
@@ -60,27 +61,14 @@ const CartPage = () => {
     const total = parseFloat(calculateTotal());
     const serviceCharge = calculateServiceCharge(total);
 
-    const handleClearCart = () => {
-       
-        localStorage.removeItem('cartId');
-        localStorage.removeItem('cartStatus');
-        localStorage.removeItem('isLoaded');
-
-
-        clearCart(); 
-
-        setItemMap({});
-        navigate('/shop')
-    };
-
     return (
         <div className="cart-page">
             <h1>Your Cart</h1>
             {isCartCompleted ? (
                 <div>
                     <p>The cart has been completed and cannot be modified.</p>
-                    <div className="start-new-cart">
-                    <button onClick={handleClearCart}>Start a New Cart</button>
+                    <div className="start-new-cart-page-btn">
+                        <StartNewCart clearCart={clearCart} />
                     </div>
                 </div>
             ) : (

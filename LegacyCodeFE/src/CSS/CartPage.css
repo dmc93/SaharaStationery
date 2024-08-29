@@ -4,6 +4,7 @@
     padding: 20px;
     box-sizing: border-box;
     padding-top: 120px;
+    text-align: center;
 }
 
 .cart-page h1 {
@@ -59,24 +60,31 @@
     background-color: #cc9900;
 }
 
-.cart-page .start-new-cart {
+
+.cart-page .start-new-cart-page-btn {
     text-align: center; 
     margin-top: 20px; 
 }
 
-.cart-page .start-new-cart button {
-    padding: 10px 20px; 
+.start-new-cart-page-btn {
+    padding: 12px 24px;
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
+    cursor: pointer;
     background-color: goldenrod;
     color: white;
-    cursor: pointer;
-    font-size: 1rem;
+    font-size: 18px;
+    text-align: center;
+    height: 45px; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
 }
 
-.cart-page .start-new-cart button:hover {
+.start-new-cart-page-btn:hover {
     background-color: #cc9900;
 }
+
 
 
 
