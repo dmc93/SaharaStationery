@@ -27,7 +27,7 @@ const CartPage = () => {
     };
 
     const calculateTotal = () => {
-        // Check if cartItems is an array before reducing
+        
         if (Array.isArray(cartItems)) {
             return cartItems.reduce((total, item) => total + item.price * item.quantity, 0).toFixed(2);
         }

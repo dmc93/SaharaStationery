@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import CustomAlert from './CustomAlert';
 import { useCart } from './CartContext';
+import { useNavigate } from 'react-router-dom';
 
 const RetrieveCart = ({ clearInput, inputValue, setInputValue, onRetrieve }) => {
-    const { setCart } = useCart(); 
+    const { setCart } = useCart();
     const [showAlert, setShowAlert] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
+    const navigate = useNavigate();
 
     useEffect(() => {
         const savedCartId = localStorage.getItem('cartId');
@@ -15,7 +17,7 @@ const RetrieveCart = ({ clearInput, inputValue, setInputValue, onRetrieve }) => 
         }
         const isLoaded = localStorage.getItem('isLoaded') === 'true';
         if (isLoaded) {
-          
+            // Optionally handle already loaded cart
         }
     }, [setInputValue]);
 
@@ -24,15 +26,21 @@ const RetrieveCart = ({ clearInput, inputValue, setInputValue, onRetrieve }) => 
             console.log(`Requesting cart from URL: http://localhost:8083/cart/${inputValue}`);
             const response = await axios.get(`http://localhost:8083/cart/${inputValue}`);
             if (response.status === 200) {
-                const { items } = response.data; 
-                console.log(`Cart retrieved. Cart ID: ${inputValue}`, items);
-                setCart(items); 
-                localStorage.setItem('cartId', inputValue); 
-                localStorage.setItem('isLoaded', 'true'); 
-                setAlertMessage('Cart successfully retrieved.');
-                clearInput(); 
+                const { items, status } = response.data;
+                setCart(items);
+                localStorage.setItem('cartId', inputValue);
+                localStorage.setItem('isLoaded', 'true');
+
+                if (status === 'Completed') {
+                    setAlertMessage('Cart successfully retrieved and is completed.');
+                    navigate(`/order-history?cartId=${inputValue}`); // Navigate to Order History with cartId
+                } else {
+                    setAlertMessage('Cart successfully retrieved.');
+                }
+
+                clearInput();
                 if (onRetrieve) {
-                    onRetrieve(items); 
+                    onRetrieve(items);
                 }
             } else {
                 setAlertMessage('Failed to retrieve cart.');
