@@ -1,3 +1,29 @@
-.cart-summary {
-    font-weight: bold;
+.discount-code-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center; 
+}
+
+.discount-code-container span {
+    margin-right: 10px;
+}
+
+.discount-code-container input {
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+.discount-row button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    background-color: goldenrod;
+    color: white;
+    cursor: pointer;
+}
+
+.discount-row button:hover {
+    background-color: #cc9900;
 }
