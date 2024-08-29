@@ -5,7 +5,7 @@ import useFetchItems from '../components/FetchItems';
 import CartTable from '../components/CartTable';
 
 const CartPage = () => {
-    const { cartItems, updateQuantity, removeFromCart, setCartItems } = useCart(); 
+    const { cartItems = [], updateQuantity, removeFromCart, setCartItems } = useCart(); 
     const { items } = useFetchItems();
     const [itemMap, setItemMap] = useState({});
 
@@ -27,7 +27,11 @@ const CartPage = () => {
     };
 
     const calculateTotal = () => {
-        return cartItems.reduce((total, item) => total + item.price * item.quantity, 0).toFixed(2);
+        // Check if cartItems is an array before reducing
+        if (Array.isArray(cartItems)) {
+            return cartItems.reduce((total, item) => total + item.price * item.quantity, 0).toFixed(2);
+        }
+        return '0.00';
     };
 
     const calculateServiceCharge = (total) => {
@@ -36,8 +40,6 @@ const CartPage = () => {
 
     const total = parseFloat(calculateTotal());
     const serviceCharge = calculateServiceCharge(total);
-
-
 
     return (
         <div className="cart-page">
@@ -49,7 +51,6 @@ const CartPage = () => {
                 handleRemoveItem={handleRemoveItem}
                 total={total}
                 serviceCharge={serviceCharge}
-             
             />
         </div>
     );

@@ -20,10 +20,10 @@ public class CartController {
     private CartService cartService;
 
     @GetMapping("/{cartId}")
-    public ResponseEntity<List<CartItemData>> getCart(@PathVariable String cartId) {
+    public ResponseEntity<Cart> getCart(@PathVariable String cartId) {
         try {
-            List<CartItemData> items = cartService.getCart(cartId);
-            return new ResponseEntity<>(items, HttpStatus.OK);
+            Cart cart = cartService.getCart(cartId); // Change to return Cart instead of List<CartItemData>
+            return new ResponseEntity<>(cart, HttpStatus.OK);
         } catch (RuntimeException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

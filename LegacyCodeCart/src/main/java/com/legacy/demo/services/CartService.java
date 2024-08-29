@@ -32,9 +32,8 @@ public class CartService {
         return cartId;
     }
 
-    public List<CartItemData> getCart(String cartId) {
+    public Cart getCart(String cartId) {
         return cartRepository.findById(cartId)
-                .map(Cart::getItems)
                 .orElseThrow(() -> new RuntimeException("Cart not found"));
     }
 

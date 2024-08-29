@@ -1,15 +1,13 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import CartItemRow from './CartItemRow';
 import CartSummary from './CartSummary';
 import CartActions from './CartActions';
 import '../CSS/CartTable.css';
-import { useCart } from './CartContext';
 
-const CartTable = ({ itemMap, handleQuantityChange, handleRemoveItem, total, serviceCharge, onRetrieve }) => {
-    const { cartItems } = useCart();
-
-    useEffect(() => {
-    }, [cartItems]); 
+const CartTable = ({ cartItems, itemMap, handleQuantityChange, handleRemoveItem, total, serviceCharge }) => {
+    if (!Array.isArray(cartItems)) {
+        return <div>No items in cart</div>;
+    }
 
     return (
         <table>
@@ -23,7 +21,7 @@ const CartTable = ({ itemMap, handleQuantityChange, handleRemoveItem, total, ser
                 </tr>
             </thead>
             <tbody>
-                {cartItems.map((item) => (
+                {cartItems.map(item => (
                     <CartItemRow
                         key={item.id}
                         item={item}
@@ -37,7 +35,7 @@ const CartTable = ({ itemMap, handleQuantityChange, handleRemoveItem, total, ser
                 <CartSummary total={total} serviceCharge={serviceCharge} />
                 <tr>
                     <td colSpan="5">
-                        <CartActions onRetrieve={onRetrieve} />
+                        <CartActions />
                     </td>
                 </tr>
             </tfoot>

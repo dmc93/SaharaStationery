@@ -8,7 +8,6 @@ const RetrieveCart = ({ clearInput, inputValue, setInputValue, onRetrieve }) => 
     const [showAlert, setShowAlert] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
 
-  
     useEffect(() => {
         const savedCartId = localStorage.getItem('cartId');
         if (savedCartId) {
@@ -16,7 +15,7 @@ const RetrieveCart = ({ clearInput, inputValue, setInputValue, onRetrieve }) => 
         }
         const isLoaded = localStorage.getItem('isLoaded') === 'true';
         if (isLoaded) {
-           
+          
         }
     }, [setInputValue]);
 
@@ -25,14 +24,15 @@ const RetrieveCart = ({ clearInput, inputValue, setInputValue, onRetrieve }) => 
             console.log(`Requesting cart from URL: http://localhost:8083/cart/${inputValue}`);
             const response = await axios.get(`http://localhost:8083/cart/${inputValue}`);
             if (response.status === 200) {
-                console.log(`Cart retrieved. Cart ID: ${inputValue}`);
-                setCart(response.data);
+                const { items } = response.data; 
+                console.log(`Cart retrieved. Cart ID: ${inputValue}`, items);
+                setCart(items); 
                 localStorage.setItem('cartId', inputValue); 
                 localStorage.setItem('isLoaded', 'true'); 
                 setAlertMessage('Cart successfully retrieved.');
                 clearInput(); 
                 if (onRetrieve) {
-                    onRetrieve(response.data); 
+                    onRetrieve(items); 
                 }
             } else {
                 setAlertMessage('Failed to retrieve cart.');
