@@ -17,13 +17,12 @@ const RetrieveCart = ({ clearInput, inputValue, setInputValue, onRetrieve }) => 
         }
         const isLoaded = localStorage.getItem('isLoaded') === 'true';
         if (isLoaded) {
-            // Optionally handle already loaded cart
+          
         }
     }, [setInputValue]);
 
     const handleRetrieve = async () => {
         try {
-            console.log(`Requesting cart from URL: http://localhost:8083/cart/${inputValue}`);
             const response = await axios.get(`http://localhost:8083/cart/${inputValue}`);
             if (response.status === 200) {
                 const { items, status } = response.data;
@@ -33,7 +32,7 @@ const RetrieveCart = ({ clearInput, inputValue, setInputValue, onRetrieve }) => 
 
                 if (status === 'Completed') {
                     setAlertMessage('Cart successfully retrieved and is completed.');
-                    navigate(`/order-history?cartId=${inputValue}`); // Navigate to Order History with cartId
+                    navigate(`/order-history?cartId=${inputValue}`);
                 } else {
                     setAlertMessage('Cart successfully retrieved.');
                 }

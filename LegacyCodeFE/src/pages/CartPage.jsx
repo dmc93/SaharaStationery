@@ -5,7 +5,7 @@ import useFetchItems from '../components/FetchItems';
 import CartTable from '../components/CartTable';
 
 const CartPage = () => {
-    const { cartItems = [], updateQuantity, removeFromCart, setCartItems } = useCart(); 
+    const { cartItems = [], updateQuantity, removeFromCart, } = useCart(); 
     const { items } = useFetchItems();
     const [itemMap, setItemMap] = useState({});
 
@@ -17,11 +17,14 @@ const CartPage = () => {
         setItemMap(map);
     }, [items]);
 
-    const handleQuantityChange = (id, event) => {
-        const quantity = parseInt(event.target.value, 10);
-        updateQuantity(id, quantity);
+    const handleQuantityChange = (id, quantity) => {
+       
+        if (Number.isInteger(quantity) && quantity >= 0) {
+            updateQuantity(id, quantity);
+        } else {
+            console.error('Invalid quantity:', quantity);
+        }
     };
-
     const handleRemoveItem = (id) => {
         removeFromCart(id);
     };
