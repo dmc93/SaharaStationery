@@ -10,42 +10,43 @@
     font-size: 2rem;
     margin-bottom: 20px;
     color: goldenrod;
+    text-align: center;
 }
 
-table {
+.cart-page table {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 20px;
 }
 
-th, td {
+.cart-page th, .cart-page td {
     border: 1px solid #ddd;
     padding: 12px;
     text-align: center;
 }
 
-th {
+.cart-page th {
     background-color: goldenrod;
     color: white;
 }
 
-tfoot td {
+.cart-page tfoot td {
     font-weight: bold;
 }
 
-.retrieve-cart {
+.cart-page .retrieve-cart {
     margin-top: 20px; 
     text-align: center;
 }
 
-.retrieve-cart input {
+.cart-page .retrieve-cart input {
     padding: 8px;
     border-radius: 4px;
     border: 1px solid #ccc;
     margin-right: 10px;
 }
 
-.retrieve-cart button {
+.cart-page .retrieve-cart button {
     padding: 8px 16px;
     border: none;
     border-radius: 4px;
@@ -54,7 +55,7 @@ tfoot td {
     cursor: pointer;
 }
 
-.retrieve-cart button:hover {
+.cart-page .retrieve-cart button:hover {
     background-color: #cc9900;
 }
 
@@ -63,16 +64,16 @@ tfoot td {
         padding: 10px;
     }
 
-    table {
+    .cart-page table {
         font-size: 14px;
     }
 
-    button {
+    .cart-page button {
         padding: 8px 16px;
         font-size: 14px;
     }
 
-    select {
+    .cart-page select {
         width: 80px;
         font-size: 14px;
     }

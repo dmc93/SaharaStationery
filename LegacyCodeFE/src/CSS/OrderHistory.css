@@ -1,7 +1,52 @@
 .order-history {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     text-align: center;
+    padding-top: 120px;
 }
 
 .order-history h1 {
     margin: 0; 
+    color: goldenrod;
+    margin-bottom: 20px;
+}
+
+.order-history table {
+    width: 60%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.order-history th, .order-history td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: center;
+}
+
+.order-history th {
+    background-color: goldenrod;
+    color: white;
+}
+
+.order-history tfoot td {
+    font-weight: bold;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .order-history table {
+        font-size: 14px;
+        width: 100%; /* Adjust table width for smaller screens */
+    }
+
+    .order-history button {
+        padding: 8px 16px;
+        font-size: 14px;
+    }
+
+    .order-history select {
+        width: 80px;
+        font-size: 14px;
+    }
 }
