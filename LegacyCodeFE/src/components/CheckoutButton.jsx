@@ -9,6 +9,11 @@ function CheckoutButton() {
     const [alertMessage, setAlertMessage] = useState('');
 
     const handleCheckout = async () => {
+        if (cartItems.length === 0) {
+            setAlertMessage('No items in the cart to checkout.');
+            setShowAlert(true);
+            return;
+        }
         try {
             let checkoutId = localStorage.getItem('cartId');
             let isInsufficient = false;

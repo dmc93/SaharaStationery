@@ -33,11 +33,10 @@
     font-weight: bold;
 }
 
-/* Responsive design */
 @media (max-width: 768px) {
     .order-history table {
         font-size: 14px;
-        width: 100%; /* Adjust table width for smaller screens */
+        width: 100%; 
     }
 
     .order-history button {
