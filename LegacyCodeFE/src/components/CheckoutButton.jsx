@@ -14,8 +14,7 @@ function CheckoutButton() {
             let isInsufficient = false;
             let updatePromises = [];
 
-           
-            const cartItemsWithStringIds = cartItems.map(item => ({
+                    const cartItemsWithStringIds = cartItems.map(item => ({
                 ...item,
                 id: String(item.id)
             }));
@@ -26,20 +25,13 @@ function CheckoutButton() {
                 headers: { 'Content-Type': 'application/json' }
             });
 
-   
             const itemDataList = itemResponse.data.map(item => ({
                 ...item,
                 id: String(item.id)
             }));
 
-         
-            console.log('Fetched item data:', itemDataList);
-            console.log('Cart items:', cartItemsWithStringIds);
-
-          
             for (let item of cartItemsWithStringIds) {
                 const itemData = itemDataList.find(data => data.id === item.id);
-                console.log(`Processing item ID ${item.id}:`, itemData);
                 if (itemData) {
                     const newQuantity = itemData.quantity - item.quantity;
                     if (newQuantity < 0) {
@@ -55,16 +47,14 @@ function CheckoutButton() {
                 }
             }
 
-            console.log('Update promises before checking insufficiency:', updatePromises);
-
             if (isInsufficient) {
                 return;
             }
 
             if (!checkoutId) {
-              
+               
                 const response = await axios.post('http://localhost:8083/cart/add', {
-                    items: cartItemsWithStringIds, 
+                    items: cartItemsWithStringIds,
                     status: 'Completed'
                 }, {
                     headers: { 'Content-Type': 'application/json' }
@@ -72,52 +62,58 @@ function CheckoutButton() {
 
                 if (response.status === 201) {
                     checkoutId = response.data;
-                    console.log(`Cart created with ID: ${checkoutId}`);
-                    localStorage.setItem('cartId', checkoutId);
+                    localStorage.setItem('checkoutID', checkoutId); 
+                    localStorage.removeItem('retrievedID'); 
                 } else {
                     setAlertMessage("Failed to create a new cart. Please try again.");
                     setShowAlert(true);
                     return;
                 }
+            } else {
+              
+                localStorage.setItem('retrievedID', checkoutId);
+                localStorage.removeItem('checkoutID'); 
             }
 
-          
+           
             const statusResponse = await axios.patch(`http://localhost:8083/cart/update/${checkoutId}`, {
                 status: "Completed"
             });
 
             if (statusResponse.status === 200) {
-                console.log('Cart status updated to Completed');
-
                
                 if (updatePromises.length > 0) {
-                    console.log('Item quantity updates:', updatePromises);
                     const updatePromisesQuantity = updatePromises.map(item =>
                         axios.patch(`http://localhost:8082/item/update/${item.id}`, { quantity: item.quantity })
                     );
 
                     try {
                         await Promise.all(updatePromisesQuantity);
-                        console.log('Item quantities updated successfully');
                     } catch (error) {
-                        console.error('Error during item quantity update:', error);
                         setAlertMessage('Failed to update item quantities. Please try again.');
                         setShowAlert(true);
+                        return;
                     }
-                } else {
-                    console.log('No item quantity updates to process');
                 }
 
-                setAlertMessage(`Checkout complete! Your order ID is ${checkoutId}`);
+             
+                if (localStorage.getItem('checkoutID')) {
+                  
+                    setAlertMessage(`Checkout complete! Your order ID is ${localStorage.getItem('checkoutID')}`);
+                } else if (localStorage.getItem('retrievedID')) {
+                   
+                    setAlertMessage('Checkout complete!');
+                }
+
+              
                 clearCart();
-                localStorage.removeItem('cartId'); 
+                localStorage.removeItem('cartId');
             } else {
                 setAlertMessage("Failed to complete checkout. Please try again.");
             }
 
             setShowAlert(true);
         } catch (error) {
-            console.error("Error during checkout:", error);
             setAlertMessage("An error occurred during checkout. Please try again.");
             setShowAlert(true);
         }
