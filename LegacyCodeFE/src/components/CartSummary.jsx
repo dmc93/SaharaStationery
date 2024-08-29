@@ -4,7 +4,7 @@ const CartSummary = ({ total, serviceCharge }) => (
     <>
         <tr>
             <td colSpan="3">Subtotal</td>
-            <td>£{total}</td>
+            <td>£{total.toFixed(2)}</td>
             <td></td>
         </tr>
         <tr>
