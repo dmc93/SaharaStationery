@@ -40,9 +40,11 @@ const OrderHistory = () => {
 
     if (!order || !order.items || order.items.length === 0) return <div>No items found in this order.</div>;
 
-    const { items } = order;
+    const { items, discountPercentage = 0 } = order;
     const total = items.reduce((sum, item) => sum + (item.price || 0) * (item.quantity || 0), 0);
+    const discountAmount = (total * (discountPercentage / 100)).toFixed(2);
     const serviceCharge = (total * 0.0725).toFixed(2);
+    const finalTotal = (total - discountAmount + parseFloat(serviceCharge)).toFixed(2);
 
     return (
         <div className="order-history" style={{ textAlign: 'center' }}>
@@ -56,31 +58,43 @@ const OrderHistory = () => {
                             <th>Item</th>
                             <th>Price</th>
                             <th>Quantity</th>
+                            <th>Discount</th>
                             <th>Total</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {items.map((item) => (
-                            <tr key={item.id}>
-                                <td>{item.name}</td>
-                                <td>£{item.price.toFixed(2)}</td>
-                                <td>{item.quantity}</td>
-                                <td>£{(item.price * item.quantity).toFixed(2)}</td>
-                            </tr>
-                        ))}
+                        {items.map((item) => {
+                            const itemTotal = (item.price || 0) * (item.quantity || 0);
+                            const itemDiscount = (itemTotal * (discountPercentage / 100)).toFixed(2);
+                            return (
+                                <tr key={item.id}>
+                                    <td>{item.name}</td>
+                                    <td>£{item.price.toFixed(2)}</td>
+                                    <td>{item.quantity}</td>
+                                    <td>£{itemDiscount}</td>
+                                    <td>£{itemTotal.toFixed(2)}</td>
+                                </tr>
+                            );
+                        })}
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colSpan="3">Subtotal:</td>
+                            <td colSpan="4">Subtotal:</td>
                             <td>£{total.toFixed(2)}</td>
                         </tr>
+                        {discountPercentage > 0 && (
+                            <tr>
+                                <td colSpan="4">Discount ({discountPercentage}%):</td>
+                                <td>£{discountAmount}</td>
+                            </tr>
+                        )}
                         <tr>
-                            <td colSpan="3">Service Charge:</td>
+                            <td colSpan="4">Service Charge:</td>
                             <td>£{serviceCharge}</td>
                         </tr>
                         <tr>
-                            <td colSpan="3">Total:</td>
-                            <td>£{(total + parseFloat(serviceCharge)).toFixed(2)}</td>
+                            <td colSpan="4">Total:</td>
+                            <td>£{finalTotal}</td>
                         </tr>
                     </tfoot>
                 </table>
