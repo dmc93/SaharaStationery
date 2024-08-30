@@ -10,21 +10,30 @@ const CartSummary = ({ total, serviceCharge }) => {
     const [alertMessage, setAlertMessage] = React.useState('');
     const [showSuccessAlert, setShowSuccessAlert] = React.useState(false);
 
-    const validDiscountCode = 'SAHARA10'; // Assuming this is your valid discount code
+    const validDiscountCode = 'SAHARA10';
     const discountValue = discountPercentage > 0 ? total * (discountPercentage / 100) : 0;
     const discountedTotal = total - discountValue;
     const finalTotal = discountedTotal + parseFloat(serviceCharge);
 
     const handleApplyDiscount = () => {
-        if (inputDiscountCode === validDiscountCode) {
-            applyDiscount(inputDiscountCode, 10); // Apply a 10% discount
-            setAlertMessage('Way Hay, you\'ve saved 10%');
+        if (discountPercentage > 0) {
+        
+            applyDiscount('', 0);
+            setAlertMessage('Discount removed');
             setShowSuccessAlert(true);
             setShowAlert(false);
         } else {
-            setAlertMessage('Invalid discount code');
-            setShowAlert(true);
-            setShowSuccessAlert(false);
+            if (inputDiscountCode === validDiscountCode) {
+             
+                applyDiscount(inputDiscountCode, 10);
+                setAlertMessage('Way Hay, you\'ve saved 10%');
+                setShowSuccessAlert(true);
+                setShowAlert(false);
+            } else {
+                setAlertMessage('Invalid discount code');
+                setShowAlert(true);
+                setShowSuccessAlert(false);
+            }
         }
     };
 
@@ -45,14 +54,14 @@ const CartSummary = ({ total, serviceCharge }) => {
                             value={inputDiscountCode}
                             onChange={(e) => setInputDiscountCode(e.target.value)}
                             placeholder="Enter discount code"
-                            disabled={discountPercentage > 0} // Disable if discount is already applied
+                            disabled={discountPercentage > 0}
                         />
                     </div>
                 </td>
                 <td>£{discountValue.toFixed(2)}</td>
                 <td>
-                    <button onClick={handleApplyDiscount} disabled={discountPercentage > 0}>
-                        Apply
+                    <button onClick={handleApplyDiscount}>
+                        {discountPercentage > 0 ? 'Remove Discount' : 'Apply'}
                     </button>
                 </td>
             </tr>
