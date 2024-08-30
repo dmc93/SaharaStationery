@@ -2,14 +2,13 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import CustomAlert from './CustomAlert';
 import { useCart } from './CartContext';
-import { useNavigate } from 'react-router-dom';
 
 const RetrieveCart = ({ clearInput, inputValue, setInputValue, onRetrieve }) => {
-    const { setCart } = useCart();
+    const { setCart } = useCart(); 
     const [showAlert, setShowAlert] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
-    const navigate = useNavigate();
 
+  
     useEffect(() => {
         const savedCartId = localStorage.getItem('cartId');
         if (savedCartId) {
@@ -17,30 +16,23 @@ const RetrieveCart = ({ clearInput, inputValue, setInputValue, onRetrieve }) => 
         }
         const isLoaded = localStorage.getItem('isLoaded') === 'true';
         if (isLoaded) {
-          
+           
         }
     }, [setInputValue]);
 
     const handleRetrieve = async () => {
         try {
+            console.log(`Requesting cart from URL: http://localhost:8083/cart/${inputValue}`);
             const response = await axios.get(`http://localhost:8083/cart/${inputValue}`);
             if (response.status === 200) {
-                const { items, status } = response.data;
-                setCart(items);
-                localStorage.setItem('cartId', inputValue);
-                localStorage.setItem('isLoaded', 'true');
-                localStorage.setItem('cartStatus', status); 
-
-                if (status === 'Completed') {
-                    setAlertMessage('Cart successfully retrieved and is completed.');
-                    navigate(`/order-history?cartId=${inputValue}`);
-                } else {
-                    setAlertMessage('Cart successfully retrieved.');
-                }
-
-                clearInput();
+                console.log(`Cart retrieved. Cart ID: ${inputValue}`);
+                setCart(response.data);
+                localStorage.setItem('cartId', inputValue); 
+                localStorage.setItem('isLoaded', 'true'); 
+                setAlertMessage('Cart successfully retrieved.');
+                clearInput(); 
                 if (onRetrieve) {
-                    onRetrieve(items);
+                    onRetrieve(response.data); 
                 }
             } else {
                 setAlertMessage('Failed to retrieve cart.');

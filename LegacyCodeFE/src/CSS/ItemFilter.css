@@ -1,71 +1,27 @@
-.item-filter-container {
-    margin-bottom: 20px;
-  }
-  
-  /* Style for the search bar */
-  .search-bar {
-    margin-bottom: 10px;
-    padding: 20px;
+.search-filter {
     background-color: #f9f9f9;
     border: 1px solid #ddd;
     border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .search-bar .form-control {
-    border-radius: 4px;
-    border: 1px solid #ccc;
-    padding: 10px;
-  }
-  
-  .search-bar .form-label {
-    font-weight: bold;
-    margin-bottom: 5px;
-  }
-  
-  /* Button to toggle filter options */
-  .filter-btn {
-    margin-bottom: 10px;
-    background-color: #d2a317;
-    color: white;
-    font-weight: bold;
-    border-radius: 4px;
-    border: none;
-    padding: 10px 20px;
-    width: 100%;
-    transition: background-color 0.3s ease;
-  }
-  
-  .filter-btn:hover {
-    background-color: #b58b0f;
-  }
-  
-  /* Container for the filter options */
-  .filter-options {
     padding: 20px;
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    margin-top: 10px;
   }
   
-  .filter-options .form-group {
+  .search-filter .form-group {
     margin-bottom: 15px;
   }
   
-  .filter-options .form-label {
+  .search-filter .form-label {
     font-weight: bold;
     margin-bottom: 5px;
   }
   
-  .filter-options .form-control {
+  .search-filter .form-control {
     border-radius: 4px;
     border: 1px solid #ccc;
     padding: 10px;
   }
   
-  .filter-options .btn-custom {
+  .search-filter .btn-custom {
     background-color: #d2a317;
     color: white;
     font-weight: bold;
@@ -76,19 +32,19 @@
     transition: background-color 0.3s ease;
   }
   
-  .filter-options .btn-custom:hover {
+  .search-filter .btn-custom:hover {
     background-color: #b58b0f;
   }
   
-  .filter-options .row {
+  .search-filter .row {
     margin-bottom: 10px;
   }
   
-  .filter-options .btn-custom.mt-3 {
+  .search-filter .btn-custom.mt-3 {
     margin-top: 20px;
   }
   
-  .filter-options .row:last-child {
+  .search-filter .row:last-child {
     margin-top: 20px;
   }
   

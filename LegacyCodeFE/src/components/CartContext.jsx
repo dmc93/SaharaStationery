@@ -3,7 +3,6 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
-
     const [cartItems, setCartItems] = useState(() => {
         const savedCart = localStorage.getItem('cartItems');
         return savedCart ? JSON.parse(savedCart) : [];
@@ -23,10 +22,6 @@ export const CartProvider = ({ children }) => {
 
     const addToCart = (item) => {
         setCartItems((prevItems) => {
-           
-            if (!Array.isArray(prevItems)) {
-                return [item]; 
-            }
             const existingItem = prevItems.find((i) => i.id === item.id);
             if (existingItem) {
                 return prevItems.map((i) =>
@@ -39,27 +34,19 @@ export const CartProvider = ({ children }) => {
 
     const updateQuantity = (id, quantity) => {
         setCartItems((prevItems) =>
-            Array.isArray(prevItems) ? 
-                prevItems.map((item) =>
-                    item.id === id ? { ...item, quantity } : item
-                )
-                : [] 
+            prevItems.map((item) =>
+                item.id === id ? { ...item, quantity } : item
+            )
         );
     };
 
     const removeFromCart = (id) => {
-        setCartItems((prevItems) =>
-            Array.isArray(prevItems) ?
-                prevItems.filter((item) => item.id !== id)
-                : [] 
-        );
+        setCartItems((prevItems) => prevItems.filter((item) => item.id !== id));
     };
 
     const setCart = (cart) => {
-       
-        const normalizedCart = Array.isArray(cart) ? cart : [];
-        setCartItems(normalizedCart);
-        localStorage.setItem('cartItems', JSON.stringify(normalizedCart));
+        setCartItems(cart);
+        localStorage.setItem('cartItems', JSON.stringify(cart));
         setIsLoaded(true); 
     };
 

@@ -9,12 +9,6 @@ function SaveCartButton() {
     const [alertMessage, setAlertMessage] = React.useState('');
 
     const handleSaveCart = async () => {
-        if (cartItems.length === 0) {
-            setAlertMessage('No items in the cart to save.');
-            setShowAlert(true);
-            return;
-        }
-
         try {
             const cartId = localStorage.getItem('cartId');
 

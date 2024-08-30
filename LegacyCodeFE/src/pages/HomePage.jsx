@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import '../CSS/HomePage.css';
 
 const HomePage = () => {
+    console.log("Inside Homepage 1")
     return (
         <main className='home-body'>
             <section className='feature-panel'>
@@ -13,7 +14,8 @@ const HomePage = () => {
                 </Link>
             </section>
             <img className='home-image' src={homeImage} alt="Home banner" />
-        </main>
+            {console.log("Inside Homepage 2")}
+            </main>
     );
 }
 

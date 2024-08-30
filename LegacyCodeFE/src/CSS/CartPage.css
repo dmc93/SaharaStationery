@@ -4,50 +4,48 @@
     padding: 20px;
     box-sizing: border-box;
     padding-top: 120px;
-    text-align: center;
 }
 
 .cart-page h1 {
     font-size: 2rem;
     margin-bottom: 20px;
     color: goldenrod;
-    text-align: center;
 }
 
-.cart-page table {
+table {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 20px;
 }
 
-.cart-page th, .cart-page td {
+th, td {
     border: 1px solid #ddd;
     padding: 12px;
     text-align: center;
 }
 
-.cart-page th {
+th {
     background-color: goldenrod;
     color: white;
 }
 
-.cart-page tfoot td {
+tfoot td {
     font-weight: bold;
 }
 
-.cart-page .retrieve-cart {
+.retrieve-cart {
     margin-top: 20px; 
     text-align: center;
 }
 
-.cart-page .retrieve-cart input {
+.retrieve-cart input {
     padding: 8px;
     border-radius: 4px;
     border: 1px solid #ccc;
     margin-right: 10px;
 }
 
-.cart-page .retrieve-cart button {
+.retrieve-cart button {
     padding: 8px 16px;
     border: none;
     border-radius: 4px;
@@ -56,53 +54,25 @@
     cursor: pointer;
 }
 
-.cart-page .retrieve-cart button:hover {
+.retrieve-cart button:hover {
     background-color: #cc9900;
 }
-
-
-.cart-page .start-new-cart-page-btn {
-    text-align: center; 
-    margin-top: 20px; 
-}
-
-.start-new-cart-page-btn {
-    padding: 12px 24px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    background-color: goldenrod;
-    color: white;
-    font-size: 18px;
-    text-align: center;
-    height: 45px; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-}
-
-.start-new-cart-page-btn:hover {
-    background-color: #cc9900;
-}
-
-
-
 
 @media (max-width: 768px) {
     .cart-page {
         padding: 10px;
     }
 
-    .cart-page table {
+    table {
         font-size: 14px;
     }
 
-    .cart-page button {
+    button {
         padding: 8px 16px;
         font-size: 14px;
     }
 
-    .cart-page select {
+    select {
         width: 80px;
         font-size: 14px;
     }

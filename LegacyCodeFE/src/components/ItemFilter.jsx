@@ -12,24 +12,12 @@ function ItemFilter({ items, onFilter }) {
   });
 
   const [categories, setCategories] = useState([]);
-  const [showFilters, setShowFilters] = useState(false); // State to control visibility of filter options
 
   useEffect(() => {
     const uniqueCategories = [...new Set(items.map(item => item.category))].filter(Boolean);
     setCategories(uniqueCategories);
   }, [items]);
 
-  // Handle search input and filter as you type
-  const handleSearchChange = (e) => {
-    const { value } = e.target;
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      name: value,
-    }));
-    applyFilters({ ...filters, name: value });
-  };
-
-  // Handle filter changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFilters((prevFilters) => ({
@@ -40,36 +28,35 @@ function ItemFilter({ items, onFilter }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    applyFilters(filters);
-    setShowFilters(false); // Optionally hide filters after applying
+    applyFilters(); // Apply the filters when the form is submitted
   };
 
-  const applyFilters = (filtersToApply) => {
+  const applyFilters = () => {
     let filtered = items.filter((item) => {
-      const matchesName = filtersToApply.name
-        ? item.name.toLowerCase().includes(filtersToApply.name.toLowerCase())
+      const matchesName = filters.name
+        ? item.name.toLowerCase().includes(filters.name.toLowerCase())
         : true;
 
-      const matchesMinPrice = filtersToApply.minPrice
-        ? item.price >= parseFloat(filtersToApply.minPrice)
+      const matchesMinPrice = filters.minPrice
+        ? item.price >= parseFloat(filters.minPrice)
         : true;
 
-      const matchesMaxPrice = filtersToApply.maxPrice
-        ? item.price <= parseFloat(filtersToApply.maxPrice)
+      const matchesMaxPrice = filters.maxPrice
+        ? item.price <= parseFloat(filters.maxPrice)
         : true;
 
-      const matchesCategory = filtersToApply.category
-        ? item.category.toLowerCase() === filtersToApply.category.toLowerCase()
+      const matchesCategory = filters.category
+        ? item.category.toLowerCase() === filters.category.toLowerCase()
         : true;
 
       return matchesName && matchesMinPrice && matchesMaxPrice && matchesCategory;
     });
 
-    if (filtersToApply.sort === "stock") {
+    if (filters.sort === "stock") {
       filtered = filtered.sort((a, b) => b.stock - a.stock);
-    } else if (filtersToApply.sort === "priceLowHigh") {
+    } else if (filters.sort === "priceLowHigh") {
       filtered = filtered.sort((a, b) => a.price - b.price);
-    } else if (filtersToApply.sort === "priceHighLow") {
+    } else if (filters.sort === "priceHighLow") {
       filtered = filtered.sort((a, b) => b.price - a.price);
     }
 
@@ -77,115 +64,111 @@ function ItemFilter({ items, onFilter }) {
   };
 
   const handleClearFilters = () => {
-    const clearedFilters = {
+    setFilters({
       name: "",
       minPrice: "",
       maxPrice: "",
       category: "",
       sort: "",
-    };
-    setFilters(clearedFilters);
+    });
     onFilter(items); // Reset the filtered items to the original list
   };
 
   return (
-    <div className="item-filter-container">
-      {/* Search Bar */}
-      <Form.Group controlId="name" className="form-group search-bar">
-        <Form.Label className="form-label">Search: </Form.Label>
-        <Form.Control
-          type="text"
-          name="name"
-          value={filters.name}
-          onChange={handleSearchChange}
-          className="form-control"
-          placeholder="Search items..."
-        />
-      </Form.Group>
-
-      {/* Filter Button */}
-      <Button variant="secondary" onClick={() => setShowFilters(!showFilters)} className="filter-btn">
-        {showFilters ? "Hide Filter Options" : "Show Filter Options"}
-      </Button>
-
-      {/* Filter Options - Hidden/Shown based on `showFilters` */}
-      {showFilters && (
-        <div className="filter-options">
-          <Form onSubmit={handleSubmit}>
-            <Row>
-              <Col md={6}>
-                <Form.Group controlId="minPrice" className="form-group">
-                  <Form.Label className="form-label">Min Price:</Form.Label>
-                  <Form.Control
-                    type="number"
-                    name="minPrice"
-                    value={filters.minPrice}
-                    onChange={handleChange}
-                    className="form-control"
-                  />
-                </Form.Group>
-              </Col>
-              <Col md={6}>
-                <Form.Group controlId="maxPrice" className="form-group">
-                  <Form.Label className="form-label">Max Price:</Form.Label>
-                  <Form.Control
-                    type="number"
-                    name="maxPrice"
-                    value={filters.maxPrice}
-                    onChange={handleChange}
-                    className="form-control"
-                  />
-                </Form.Group>
-              </Col>
-            </Row>
-            <Row>
-              <Col md={6}>
-                <Form.Group controlId="category" className="form-group">
-                  <Form.Label className="form-label">Category:</Form.Label>
-                  <Form.Control
-                    as="select"
-                    name="category"
-                    value={filters.category}
-                    onChange={handleChange}
-                    className="form-control"
-                  >
-                    <option value="">Select</option>
-                    {categories.map((category, index) => (
-                      <option key={index} value={category}>
-                        {category}
-                      </option>
-                    ))}
-                  </Form.Control>
-                </Form.Group>
-              </Col>
-              <Col md={6}>
-                <Form.Group controlId="sort" className="form-group">
-                  <Form.Label className="form-label">Sort By:</Form.Label>
-                  <Form.Control
-                    as="select"
-                    name="sort"
-                    value={filters.sort}
-                    onChange={handleChange}
-                    className="form-control"
-                  >
-                    <option value="">Select</option>
-                    <option value="stock">Stock Availability</option>
-                    <option value="priceLowHigh">Price: Low to High</option>
-                    <option value="priceHighLow">Price: High to Low</option>
-                  </Form.Control>
-                </Form.Group>
-              </Col>
-            </Row>
-            <Button variant="primary" type="submit" className="mt-3 w-100">
-              Apply Filters
-            </Button>
-            <Button variant="secondary" onClick={handleClearFilters} className="mt-2 w-100">
-              Clear Filters
-            </Button>
-          </Form>
-        </div>
-      )}
-    </div>
+    <Form className="search-filter" onSubmit={handleSubmit}>
+      <Row>
+        <Col md={6}>
+          <Form.Group controlId="name" className="form-group">
+            <Form.Label className="form-label">Item Name: </Form.Label>
+            <Form.Control
+              type="text"
+              name="name"
+              value={filters.name}
+              onChange={handleChange}
+              className="form-control"
+            />
+          </Form.Group>
+        </Col>
+        <Col md={3}>
+          <Form.Group controlId="minPrice" className="form-group">
+            <Form.Label className="form-label">Min Price: </Form.Label>
+            <Form.Control
+              type="number"
+              name="minPrice"
+              value={filters.minPrice}
+              onChange={handleChange}
+              className="form-control"
+            />
+          </Form.Group>
+        </Col>
+        <Col md={3}>
+          <Form.Group controlId="maxPrice" className="form-group">
+            <Form.Label className="form-label">Max Price: </Form.Label>
+            <Form.Control
+              type="number"
+              name="maxPrice"
+              value={filters.maxPrice}
+              onChange={handleChange}
+              className="form-control"
+            />
+          </Form.Group>
+        </Col>
+      </Row>
+      <Row>
+        <Col md={6}>
+          <Form.Group controlId="category" className="form-group">
+            <Form.Label className="form-label">Category: </Form.Label>
+            <Form.Control
+              as="select"
+              name="category"
+              value={filters.category}
+              onChange={handleChange}
+              className="form-control"
+            >
+              <option value="">Select</option>
+              {categories.map((category, index) => (
+                <option key={index} value={category}>
+                  {category}
+                </option>
+              ))}
+            </Form.Control>
+          </Form.Group>
+        </Col>
+        <Col md={6}>
+          <Form.Group controlId="sort" className="form-group">
+            <Form.Label className="form-label">Sort By: </Form.Label>
+            <Form.Control
+              as="select"
+              name="sort"
+              value={filters.sort}
+              onChange={handleChange}
+              className="form-control"
+            >
+              <option value="">Select</option>
+              <option value="stock">Stock Availability</option>
+              <option value="priceLowHigh">Price: Low to High</option>
+              <option value="priceHighLow">Price: High to Low</option>
+            </Form.Control>
+          </Form.Group>
+        </Col>
+      </Row>
+      <Row>
+        <Col xs={12}>
+          <Button variant="primary" type="submit" className="btn-custom mt-3">
+            Apply Filters
+          </Button>
+        </Col>
+        <Col xs={12} className="mt-2">
+          <Button
+            variant="secondary"
+            onClick={handleClearFilters}
+            className="btn-custom"
+          >
+            Clear Filters
+          </Button>
+        </Col>
+      </Row>
+    </Form>
   );
 }
 
