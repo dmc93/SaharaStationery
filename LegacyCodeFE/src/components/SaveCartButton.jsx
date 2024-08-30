@@ -2,14 +2,14 @@ import React from 'react';
 import axios from 'axios';
 import CustomAlert from './CustomAlert';
 import { useCart } from './CartContext';
-import CartSummary from './CartSummary'; // Import CartSummary if it's where you manage discounts
+import CartSummary from './CartSummary';
 
 function SaveCartButton() {
     const { cartItems, clearCart, isLoaded } = useCart();
     const [showAlert, setShowAlert] = React.useState(false);
     const [alertMessage, setAlertMessage] = React.useState('');
 
-    // Assume discount information is stored in context
+ 
     const { discountCode, discountPercentage } = useCart();
 
     const handleSaveCart = async () => {
@@ -25,8 +25,8 @@ function SaveCartButton() {
             const cartPayload = {
                 items: cartItems,
                 status: isLoaded ? 'in progress' : 'in progress',
-                discountCode: discountCode || '', // Add discount code
-                discountPercentage: discountPercentage || 0 // Add discount percentage
+                discountCode: discountCode || '', 
+                discountPercentage: discountPercentage || 0 
             };
 
             let response;

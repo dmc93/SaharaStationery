@@ -5,9 +5,12 @@ const StartNewCart = ({ clearCart, className }) => {
     const navigate = useNavigate();
 
     const handleClearCart = () => {
+   
         localStorage.removeItem('cartId');
         localStorage.removeItem('cartStatus');
         localStorage.removeItem('isLoaded');
+        localStorage.removeItem('discountCode'); 
+        localStorage.removeItem('discountPercentage'); 
 
         clearCart();
         navigate('/shop');

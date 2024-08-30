@@ -68,11 +68,16 @@ export const CartProvider = ({ children }) => {
         setCartItems([]);
         localStorage.removeItem('cartItems');
         localStorage.removeItem('cartId');
+        localStorage.removeItem('cartStatus');
         localStorage.removeItem('isLoaded');
+        localStorage.removeItem('discountCode');
+        localStorage.removeItem('discountPercentage');
         setIsLoaded(false);
+        setDiscountCode('');
+        setDiscountPercentage(0);
     };
 
-    // Functions to handle discount
+  
     const applyDiscount = (code, percentage) => {
         setDiscountCode(code);
         setDiscountPercentage(percentage);

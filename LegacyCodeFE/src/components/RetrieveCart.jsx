@@ -5,7 +5,7 @@ import { useCart } from './CartContext';
 import { useNavigate } from 'react-router-dom';
 
 const RetrieveCart = ({ clearInput, inputValue, setInputValue, onRetrieve }) => {
-    const { setCart } = useCart();
+    const { setCart, applyDiscount } = useCart();
     const [showAlert, setShowAlert] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
     const navigate = useNavigate();
@@ -15,21 +15,22 @@ const RetrieveCart = ({ clearInput, inputValue, setInputValue, onRetrieve }) => 
         if (savedCartId) {
             setInputValue(savedCartId);
         }
-        const isLoaded = localStorage.getItem('isLoaded') === 'true';
-        if (isLoaded) {
-          
-        }
     }, [setInputValue]);
 
     const handleRetrieve = async () => {
         try {
             const response = await axios.get(`http://localhost:8083/cart/${inputValue}`);
             if (response.status === 200) {
-                const { items, status } = response.data;
+                const { items, status, discountCode, discountPercentage } = response.data;
                 setCart(items);
                 localStorage.setItem('cartId', inputValue);
                 localStorage.setItem('isLoaded', 'true');
                 localStorage.setItem('cartStatus', status); 
+
+                // Apply discount code and percentage
+                if (discountCode && discountPercentage) {
+                    applyDiscount(discountCode, discountPercentage);
+                }
 
                 if (status === 'Completed') {
                     setAlertMessage('Cart successfully retrieved and is completed.');

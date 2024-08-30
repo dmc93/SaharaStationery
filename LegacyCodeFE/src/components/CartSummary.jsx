@@ -1,23 +1,23 @@
-import React, { useContext, useState } from 'react';
+import React from 'react';
 import { useCart } from './CartContext';
 import '../CSS/CartSummary.css';
 import CustomAlert from './CustomAlert';
 
 const CartSummary = ({ total, serviceCharge }) => {
-    const { applyDiscount, discountCode, discountPercentage } = useCart();
-    const [inputDiscountCode, setInputDiscountCode] = useState('');
-    const [showAlert, setShowAlert] = useState(false);
-    const [alertMessage, setAlertMessage] = useState('');
-    const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+    const { discountCode, discountPercentage, applyDiscount } = useCart();
+    const [inputDiscountCode, setInputDiscountCode] = React.useState(discountCode || '');
+    const [showAlert, setShowAlert] = React.useState(false);
+    const [alertMessage, setAlertMessage] = React.useState('');
+    const [showSuccessAlert, setShowSuccessAlert] = React.useState(false);
 
-    const validDiscountCode = 'SAHARA10';
+    const validDiscountCode = 'SAHARA10'; // Assuming this is your valid discount code
     const discountValue = discountPercentage > 0 ? total * (discountPercentage / 100) : 0;
     const discountedTotal = total - discountValue;
     const finalTotal = discountedTotal + parseFloat(serviceCharge);
 
     const handleApplyDiscount = () => {
         if (inputDiscountCode === validDiscountCode) {
-            applyDiscount(inputDiscountCode, 10);
+            applyDiscount(inputDiscountCode, 10); // Apply a 10% discount
             setAlertMessage('Way Hay, you\'ve saved 10%');
             setShowSuccessAlert(true);
             setShowAlert(false);
@@ -45,12 +45,15 @@ const CartSummary = ({ total, serviceCharge }) => {
                             value={inputDiscountCode}
                             onChange={(e) => setInputDiscountCode(e.target.value)}
                             placeholder="Enter discount code"
+                            disabled={discountPercentage > 0} // Disable if discount is already applied
                         />
                     </div>
                 </td>
                 <td>£{discountValue.toFixed(2)}</td>
                 <td>
-                    <button onClick={handleApplyDiscount}>Apply</button>
+                    <button onClick={handleApplyDiscount} disabled={discountPercentage > 0}>
+                        Apply
+                    </button>
                 </td>
             </tr>
 
