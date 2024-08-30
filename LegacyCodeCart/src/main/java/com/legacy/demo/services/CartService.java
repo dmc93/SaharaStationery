@@ -22,15 +22,18 @@ public class CartService {
     private static final Random random = new Random();
 
     @Transactional
-    public String createCartWithItems(List<CartItemData> items, String status) {
+    public String createCartWithItems(List<CartItemData> items, String status, String discountCode, double discountPercentage) {
         String cartId = generateOrderId();
         Cart cart = new Cart();
         cart.setCartId(cartId);
         cart.setItems(items);
-        cart.setStatus(status); // Set provided status
+        cart.setStatus(status);
+        cart.setDiscountCode(discountCode);
+        cart.setDiscountPercentage(discountPercentage);
         cartRepository.save(cart);
         return cartId;
     }
+
 
     public Cart getCart(String cartId) {
         return cartRepository.findById(cartId)
@@ -46,7 +49,7 @@ public class CartService {
         return orderId;
     }
 
-    public ResponseEntity<?> updateCart(String cartId, List<CartItemData> items, String status) {
+    public ResponseEntity<?> updateCart(String cartId, List<CartItemData> items, String status, String discountCode, double discountPercentage) {
         Optional<Cart> found = cartRepository.findByCartId(cartId);
         if (found.isEmpty()) {
             return new ResponseEntity<>("No Cart found with ID " + cartId, HttpStatus.NOT_FOUND);
@@ -55,8 +58,11 @@ public class CartService {
         Cart toUpdate = found.get();
         if (items != null) toUpdate.setItems(items);
         if (status != null) toUpdate.setStatus(status);
+        if (discountCode != null) toUpdate.setDiscountCode(discountCode);
+        if (discountPercentage >= 0) toUpdate.setDiscountPercentage(discountPercentage);
 
         Cart updated = cartRepository.save(toUpdate);
         return ResponseEntity.ok(updated);
     }
+
 }

@@ -3,7 +3,6 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
-
     const [cartItems, setCartItems] = useState(() => {
         const savedCart = localStorage.getItem('cartItems');
         return savedCart ? JSON.parse(savedCart) : [];
@@ -12,6 +11,10 @@ export const CartProvider = ({ children }) => {
     const [isLoaded, setIsLoaded] = useState(() => {
         return localStorage.getItem('isLoaded') === 'true';
     });
+
+    // State for discount
+    const [discountCode, setDiscountCode] = useState('');
+    const [discountPercentage, setDiscountPercentage] = useState(0);
 
     useEffect(() => {
         localStorage.setItem('cartItems', JSON.stringify(cartItems));
@@ -23,9 +26,8 @@ export const CartProvider = ({ children }) => {
 
     const addToCart = (item) => {
         setCartItems((prevItems) => {
-           
             if (!Array.isArray(prevItems)) {
-                return [item]; 
+                return [item];
             }
             const existingItem = prevItems.find((i) => i.id === item.id);
             if (existingItem) {
@@ -56,11 +58,10 @@ export const CartProvider = ({ children }) => {
     };
 
     const setCart = (cart) => {
-       
         const normalizedCart = Array.isArray(cart) ? cart : [];
         setCartItems(normalizedCart);
         localStorage.setItem('cartItems', JSON.stringify(normalizedCart));
-        setIsLoaded(true); 
+        setIsLoaded(true);
     };
 
     const clearCart = () => {
@@ -68,11 +69,34 @@ export const CartProvider = ({ children }) => {
         localStorage.removeItem('cartItems');
         localStorage.removeItem('cartId');
         localStorage.removeItem('isLoaded');
-        setIsLoaded(false); 
+        setIsLoaded(false);
+    };
+
+    // Functions to handle discount
+    const applyDiscount = (code, percentage) => {
+        setDiscountCode(code);
+        setDiscountPercentage(percentage);
+    };
+
+    const removeDiscount = () => {
+        setDiscountCode('');
+        setDiscountPercentage(0);
     };
 
     return (
-        <CartContext.Provider value={{ cartItems, addToCart, updateQuantity, removeFromCart, setCart, clearCart, isLoaded }}>
+        <CartContext.Provider value={{
+            cartItems,
+            addToCart,
+            updateQuantity,
+            removeFromCart,
+            setCart,
+            clearCart,
+            isLoaded,
+            discountCode,
+            discountPercentage,
+            applyDiscount,
+            removeDiscount
+        }}>
             {children}
         </CartContext.Provider>
     );

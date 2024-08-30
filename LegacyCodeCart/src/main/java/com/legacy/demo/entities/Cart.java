@@ -19,6 +19,8 @@ public class Cart {
     private List<CartItemData> items;
 
     private String status;
+    private String discountCode;
+    private double discountPercentage;
 
     // Getters and Setters
 
@@ -44,5 +46,21 @@ public class Cart {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getDiscountCode() {
+        return discountCode;
+    }
+
+    public void setDiscountCode(String discountCode) {
+        this.discountCode = discountCode;
+    }
+
+    public double getDiscountPercentage() {
+        return discountPercentage;
+    }
+
+    public void setDiscountPercentage(double discountPercentage) {
+        this.discountPercentage = discountPercentage;
     }
 }

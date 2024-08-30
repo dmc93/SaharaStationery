@@ -31,7 +31,12 @@ public class CartController {
 
     @PostMapping("/add")
     public ResponseEntity<String> addItems(@RequestBody CartDTO cartDTO) {
-        String cartId = cartService.createCartWithItems(cartDTO.getItems(), cartDTO.getStatus());
+        String cartId = cartService.createCartWithItems(
+                cartDTO.getItems(),
+                cartDTO.getStatus(),
+                cartDTO.getDiscountCode(),
+                cartDTO.getDiscountPercentage()
+        );
         return new ResponseEntity<>(cartId, HttpStatus.CREATED);
     }
 
@@ -41,7 +46,9 @@ public class CartController {
         return this.cartService.updateCart(
                 cartId,
                 cartDTO.getItems(),
-                cartDTO.getStatus()
+                cartDTO.getStatus(),
+                cartDTO.getDiscountCode(),
+                cartDTO.getDiscountPercentage()
         );
     }
 }

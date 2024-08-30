@@ -2,11 +2,15 @@ import React from 'react';
 import axios from 'axios';
 import CustomAlert from './CustomAlert';
 import { useCart } from './CartContext';
+import CartSummary from './CartSummary'; // Import CartSummary if it's where you manage discounts
 
 function SaveCartButton() {
     const { cartItems, clearCart, isLoaded } = useCart();
     const [showAlert, setShowAlert] = React.useState(false);
     const [alertMessage, setAlertMessage] = React.useState('');
+
+    // Assume discount information is stored in context
+    const { discountCode, discountPercentage } = useCart();
 
     const handleSaveCart = async () => {
         if (cartItems.length === 0) {
@@ -20,12 +24,13 @@ function SaveCartButton() {
 
             const cartPayload = {
                 items: cartItems,
-                status: isLoaded ? 'in progress' : 'in progress' 
+                status: isLoaded ? 'in progress' : 'in progress',
+                discountCode: discountCode || '', // Add discount code
+                discountPercentage: discountPercentage || 0 // Add discount percentage
             };
 
             let response;
             if (isLoaded && cartId) {
-                
                 response = await axios.patch(`http://localhost:8083/cart/update/${cartId}`, cartPayload, {
                     headers: { 'Content-Type': 'application/json' }
                 });
@@ -35,7 +40,6 @@ function SaveCartButton() {
                     setAlertMessage('Failed to update cart.');
                 }
             } else {
-               
                 response = await axios.post('http://localhost:8083/cart/add', cartPayload, {
                     headers: { 'Content-Type': 'application/json' }
                 });
