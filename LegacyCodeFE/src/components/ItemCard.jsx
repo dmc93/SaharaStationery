@@ -6,7 +6,7 @@ import CustomAlert from '../components/CustomAlert';
 const ItemCard = ({ id, name, price, imageUrl, quantity, category }) => {
     const [inputQuantity, setInputQuantity] = useState(1);
     const { cartItems, addToCart } = useCart();
-    const navigate = useNavigate(); 
+    const navigate = useNavigate();
     const [alertMessage, setAlertMessage] = useState('');
     const [showAlert, setShowAlert] = useState(false);
     const [showPopup, setShowPopup] = useState(false);
@@ -24,7 +24,7 @@ const ItemCard = ({ id, name, price, imageUrl, quantity, category }) => {
             setShowAlert(true);
         } else {
             addToCart({ id, name, price, imageUrl, quantity: inputQuantity });
-            setShowPopup(true);  
+            setShowPopup(true);
         }
     };
 
@@ -37,7 +37,7 @@ const ItemCard = ({ id, name, price, imageUrl, quantity, category }) => {
     };
 
     const goToCart = () => {
-       navigate('/cart');  
+        navigate('/cart');
     };
 
     return (
@@ -47,7 +47,10 @@ const ItemCard = ({ id, name, price, imageUrl, quantity, category }) => {
             <p>Category: {category}</p>
             <img className="card-image" src={imageUrl} alt={name} height={"50px"} />
             <br />
-            <p className="stock-info">Stock Available: {quantity}</p>
+            <p className="stock-info">
+                Stock Available: {quantity > 10 ? '10+' : quantity}
+            </p>
+
             {quantity > 0 ? (
                 <div className="quantityContainer">
                     <label htmlFor={`quantity-${id}`} className="quantityLabel">Qty:</label>
