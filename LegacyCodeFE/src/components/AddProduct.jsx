@@ -21,19 +21,19 @@ const AddProduct = ({ onAddProduct }) => {
   const [isModalVisible, setIsModalVisible] = useState(true);
   const [newCategory, setNewCategory] = useState('');
 
-  const { items: existingProducts, error, refetch } = useFetchItems(); // Added refetch
+  const { items: existingProducts, error, refetch } = useFetchItems();
   const [categories, setCategories] = useState([]);
 
-  // Function to update categories based on existing products
+
   const updateCategories = (products) => {
     const uniqueCategories = [...new Set(products.map(item => item.category))];
     setCategories(uniqueCategories);
   };
 
-  // Fetch categories each time the modal opens
+
   const handleOpenModal = async () => {
-    await refetch(); // Refetch the items to get the latest products, including the newly added one
-    updateCategories(existingProducts); // Update categories after refetching
+    await refetch(); 
+    updateCategories(existingProducts);
     setIsModalOpen(true);
   };
 
@@ -49,7 +49,7 @@ const AddProduct = ({ onAddProduct }) => {
     if (newCategory) {
       setFormData((prevFormData) => ({
         ...prevFormData,
-        category: '' // Reset category dropdown if new category is provided
+        category: '' 
       }));
     }
   }, [newCategory]);
@@ -103,8 +103,8 @@ const AddProduct = ({ onAddProduct }) => {
       });
       setNewCategory('');
       
-      await refetch(); // Refetch the items to update the products list after adding a new product
-      updateCategories(existingProducts); // Update the categories based on the latest products
+      await refetch(); 
+      updateCategories(existingProducts); 
       onAddProduct();
       setIsModalOpen(false);
     } catch (error) {
@@ -138,7 +138,7 @@ const AddProduct = ({ onAddProduct }) => {
             onChange={setFormData}
             onSubmit={handleSubmit}
             onCancel={() => setIsModalOpen(false)}
-            categories={categories} // Pass categories to the ProductForm
+            categories={categories} 
             onCategoryChange={handleCategoryChange}
             newCategory={newCategory}
             onNewCategoryChange={handleNewCategoryChange}
