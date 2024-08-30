@@ -12,8 +12,7 @@ export const CartProvider = ({ children }) => {
         return localStorage.getItem('isLoaded') === 'true';
     });
 
-    // State for discount
-    const [discountCode, setDiscountCode] = useState('');
+        const [discountCode, setDiscountCode] = useState('');
     const [discountPercentage, setDiscountPercentage] = useState(0);
 
     useEffect(() => {

@@ -27,7 +27,7 @@ const RetrieveCart = ({ clearInput, inputValue, setInputValue, onRetrieve }) => 
                 localStorage.setItem('isLoaded', 'true');
                 localStorage.setItem('cartStatus', status); 
 
-                // Apply discount code and percentage
+              
                 if (discountCode && discountPercentage) {
                     applyDiscount(discountCode, discountPercentage);
                 }

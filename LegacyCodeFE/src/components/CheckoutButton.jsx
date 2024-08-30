@@ -4,7 +4,7 @@ import CustomAlert from './CustomAlert';
 import { useCart } from './CartContext';
 
 function CheckoutButton() {
-    const { cartItems, clearCart } = useCart();
+    const { cartItems, clearCart, discountCode, discountPercentage } = useCart();
     const [showAlert, setShowAlert] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
 
@@ -14,17 +14,17 @@ function CheckoutButton() {
             setShowAlert(true);
             return;
         }
+
         try {
             let checkoutId = localStorage.getItem('cartId');
             let isInsufficient = false;
             let updatePromises = [];
 
-                    const cartItemsWithStringIds = cartItems.map(item => ({
+            const cartItemsWithStringIds = cartItems.map(item => ({
                 ...item,
                 id: String(item.id)
             }));
 
-          
             const itemIds = cartItemsWithStringIds.map(item => item.id);
             const itemResponse = await axios.post('http://localhost:8082/items/getByIds', itemIds, {
                 headers: { 'Content-Type': 'application/json' }
@@ -57,36 +57,36 @@ function CheckoutButton() {
             }
 
             if (!checkoutId) {
-               
                 const response = await axios.post('http://localhost:8083/cart/add', {
                     items: cartItemsWithStringIds,
-                    status: 'Completed'
+                    status: 'Completed',
+                    discountCode: discountCode, 
+                    discountPercentage: discountPercentage 
                 }, {
                     headers: { 'Content-Type': 'application/json' }
                 });
 
                 if (response.status === 201) {
                     checkoutId = response.data;
-                    localStorage.setItem('checkoutID', checkoutId); 
-                    localStorage.removeItem('retrievedID'); 
+                    localStorage.setItem('checkoutID', checkoutId);
+                    localStorage.removeItem('retrievedID');
                 } else {
                     setAlertMessage("Failed to create a new cart. Please try again.");
                     setShowAlert(true);
                     return;
                 }
             } else {
-              
                 localStorage.setItem('retrievedID', checkoutId);
-                localStorage.removeItem('checkoutID'); 
+                localStorage.removeItem('checkoutID');
             }
 
-           
             const statusResponse = await axios.patch(`http://localhost:8083/cart/update/${checkoutId}`, {
-                status: "Completed"
+                status: "Completed",
+                discountCode: discountCode,
+                discountPercentage: discountPercentage 
             });
 
             if (statusResponse.status === 200) {
-               
                 if (updatePromises.length > 0) {
                     const updatePromisesQuantity = updatePromises.map(item =>
                         axios.patch(`http://localhost:8082/item/update/${item.id}`, { quantity: item.quantity })
@@ -101,16 +101,12 @@ function CheckoutButton() {
                     }
                 }
 
-             
                 if (localStorage.getItem('checkoutID')) {
-                  
                     setAlertMessage(`Checkout complete! Your order ID is ${localStorage.getItem('checkoutID')}`);
                 } else if (localStorage.getItem('retrievedID')) {
-                   
                     setAlertMessage('Checkout complete!');
                 }
 
-              
                 clearCart();
                 localStorage.removeItem('cartId');
             } else {
