@@ -1,0 +1,374 @@
+{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang2057{\fonttbl{\f0\fnil\fcharset0 Calibri;}{\f1\fnil\fcharset2 Symbol;}}
+{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
+\pard\sl240\slmult1\ul\b\f0\fs22\lang9 Persistency Across All Functions to ensure that cart state is preserved across different functions.  (Code is in CartContext)\par
+\ulnone\b0\par
+Used localStorage for persistence which allows data to be stored in a persistent way. Data stored in localStorage does not get lost on refresh and remains even after the browser is closed and reopened.\par
+\par
+The code uses localStorage to store the cart items, the isLoaded state, the discount code etc. When the CartProvider component is first loaded, the state for cartItems and isLoaded is initialised by checking if there is any previously saved data in localStorage:\par
+\b\par
+const [cartItems, setCartItems] = useState(() => \{\par
+    const savedCart = localStorage.getItem('cartItems');\par
+    return savedCart ? JSON.parse(savedCart) : [];\par
+\});\par
+\b0\par
+\b const [isLoaded, setIsLoaded] = useState(() => \{\par
+    return localStorage.getItem('isLoaded') === 'true';\par
+\});\par
+\b0\par
+If data exists in localStorage, it is used to initialise the state. If not, default values are used.\par
+\par
+The useEffect hook is used to update localStorage whenever the cartItems or isLoaded state changes:\par
+\par
+\b useEffect(() => \{\par
+    localStorage.setItem('cartItems', JSON.stringify(cartItems));\par
+\}, [cartItems]);\par
+useEffect(() => \{\par
+    localStorage.setItem('isLoaded', isLoaded);\par
+\}, [isLoaded]);\par
+\b0\par
+This makes sure that every time the cart items or load state is changed, the changes are reflected in localStorage, preserving the state regardless of refresh or page changes.\par
+\par
+Some of the other functions use this now too like updatequantity, removefromcart etc. \par
+\par
+\ul\b Added a button to clear the cart or start a new cart. (Code is in ClearCart and StartNewCart)\ulnone\par
+\par
+\b0 The clearCart or StartNewCart function removes all cart-related data from localStorage:\par
+\par
+\b const clearCart = () => \{\par
+    setCartItems([]);\par
+    localStorage.removeItem('cartItems');\par
+    localStorage.removeItem('isLoaded');\par
+    localStorage.removeItem('discountCode');\par
+    localStorage.removeItem('discountPercentage');\par
+    setIsLoaded(false);\par
+    setDiscountCode('');\par
+    setDiscountPercentage(0);\par
+\};\par
+\b0\par
+This makes sure that when a user decides to clear their cart, all relevant data is also removed from persistent storage.  I couldn't get it to clear anything that was typed into the discount input field so might be something to work on? \par
+\par
+\ul\b Save button now updates an existing cart if one is retrieved rather than creating a new one. (Code is in SaveCartButton)\ulnone\par
+\b0\par
+The code uses the isLoaded variable from the useCart context to determine whether a cart has been loaded previously.\par
+\par
+It also checks for an existing cartId in localStorage, which would indicate that a cart has already been saved before and can be updated.\par
+\par
+If isLoaded is false or there is no cartId in localStorage, it means the cart is new and hasn\rquote t been saved before.  The code sends a POST request to create a new cart. \par
+\par
+If isLoaded is true and there is an existing cartId, it indicates that the cart has been saved before and should be updated rather than creating a new one.  The code sends a PATCH request to update the existing cart.\par
+\par
+\ul\b You can no longer checkout or save a cart with no items in it (Code is in SaveCartButton and CheckoutButton). \par
+\par
+\ulnone\b0  Before proceeding with the checkout process, the function handleCheckout checks if there are any items in the cart by evaluating \b cartItems.length === 0.\b0\par
+\par
+If the cart is empty (i.e., cartItems.length is 0), it sets an alert message ('No items in the cart to checkout.').\par
+\par
+\b const handleCheckout = async () => \{\par
+    if (cartItems.length === 0) \{\par
+        setAlertMessage('No items in the cart to checkout.');\par
+        setShowAlert(true);\par
+        return;\par
+    \}\par
+\par
+const handleSaveCart = async () => \{\par
+    if (cartItems.length === 0) \{\par
+        setAlertMessage('No items in the cart to save.');\par
+        setShowAlert(true);\par
+        return;\par
+    \}\par
+\par
+\b0 By returning early when the cart is empty, no new checkout process is initiated.\par
+\b\par
+\ul Added logic to refresh the save and update operations dynamically. (Code is in SaveCartButton)\par
+\ulnone\par
+\b0 The SaveCartButton component dynamically updates its button label between "Save Cart" and "Update Cart" based on whether the cart has already been loaded and saved before. \par
+\par
+The component checks on the isLoaded state from the useCart context to check if a cart has already been saved.\par
+\par
+The text on the button changes dynamically based on the value of isLoaded.\par
+\par
+\b <button className="save-cart-btn" onClick=\{handleSaveCart\}>\par
+    \{isLoaded ? 'Update Cart' : 'Save Cart'\}\par
+</button>\par
+\b0\par
+If isLoaded is true, meaning the cart has already been saved, the button text displays "Update Cart."\par
+\par
+If isLoaded is false, meaning this is a new cart that hasn't been saved before, the button text displays "Save Cart."\par
+\par
+When the component loads, it checks the current state of the cart (using isLoaded) to determine which label the button should display.\par
+\par
+If the cart is saved for the first time or updated, isLoaded will be updated accordingly, which triggers a refresh of the component with the new button label.\par
+\par
+After the cart is either saved or updated, the clearCart function will reset the cart state, affecting the isLoaded state and changing the button label.\par
+\par
+\ul\b Added a category column to the cart table (Code is in ItemList)\ulnone\par
+\par
+\b0 Don't think I need to explain this one :)\par
+\b\par
+\ul Added a page to view order history and navigate to it if a completed cart is retrieved (Code is in OrderHistory, CartPage and RetrieveCart).\par
+\ulnone\b0\par
+When you click the "Retrieve Cart" button, the handleRetrieve function is triggered. This function sends a GET request to the server to retrieve the cart data using the entered Cart ID.\par
+\par
+If the cart is successfully retrieved , the cart data (items, status, discount code, etc.) is saved in the context (setCart and applyDiscount).\par
+\par
+The Cart ID and other relevant information is  also saved to localStorage to maintain persistence.\par
+\par
+If the retrieved cart's status is 'Completed', the user is automatically redirected to the OrderHistory page using \b navigate(/order-history?cartId=$\{inputValue\}).\b0\par
+\par
+When the OrderHistory component is mounted, it attempts to fetch the order details using the Cart ID stored in localStorage.\par
+\par
+A GET request is sent to retrieve the order details from the server.\par
+\par
+If the order is successfully retrieved, the component displays the list of items, their prices, quantities, applied discounts, service charge, and the final total.\par
+\par
+The component calculates the subtotal, the discount amount based on the percentage, a service charge, and the final total for the order.\par
+\par
+On the OrderHistory page, you can see the details of the completed order, including items, prices, discounts, and the final amount.\par
+\par
+The CartPage then displays whether the cart has been completed or not. If the cart is completed, the page prevents any changes to the cart and tells you that the cart cannot be changed. \par
+\par
+The isCartCompleted state determines whether the cart has been completed. If true, the cart is marked as completed, and no changes are allowed.\par
+\par
+When the CartPage loads, the useEffect hook checks the cart's status by retrieving the cartStatus from localStorage.  If the cartStatus is 'Completed', it sets isCartCompleted to true.  Otherwise, it sets isCartCompleted to false and creates a mapping of item IDs to their quantities from the fetched items (itemMap).\par
+\par
+If isCartCompleted is true, the page displays a message: "The cart has been completed and cannot be modified."\par
+\par
+You are given an option to start a new cart via the StartNewCart component, which includes a button for clearing the current cart.\par
+\par
+\b\{isCartCompleted ? (\par
+    <div>\par
+        <p>The cart has been completed and cannot be modified.</p>\par
+        <div className="start-new-cart-page-btn">\par
+            <StartNewCart clearCart=\{clearCart\} />\par
+        </div>\par
+    </div>\par
+) \b0\par
+\par
+\ul\b Added functionality to apply and remove discount codes (Code is in CartSummary).\par
+\ulnone\par
+inputDiscountCode\b0  stores the current input value for the discount code entered by the user.\par
+\par
+\b discountCode and discountPercentage \b0 is retrieved from the CartContext if they already exist.\par
+\par
+\b validDiscountCode \b0 is the hardcoded discount code ('SAHARA10').  Haven't got to the point of adding multiple codes. You can change the value of the discount code here if you want to name it something else. \par
+\par
+\b discountValue \b0 is the monetary value of the discount based on the total cart value and the discount percentage.\par
+\par
+\b discountedTotal \b0 is the subtotal after applying the discount.\par
+\par
+\b finalTotal \b0 is the final total including the service charge (service charge is based on the original total before discount at the moment). \par
+\par
+You enter a discount code in the input field (\b inputDiscountCode\b0 ).  When you click "Apply," the code checks if \b inputDiscountCode \b0 matches the \b validDiscountCode \b0 ('SAHARA10').\par
+\par
+If the code is correct, \b applyDiscount \b0 is called with the discount code and a percentage of 10 (this is where you can change the discount value).  If the code is incorrect you'll get a message telling you that it's wrong. \par
+\par
+An alert is shown with the message "Way Hay, you've saved 10%," and the discount is applied to the cart.\par
+\par
+If a discount is already applied \b (discountPercentage > 0)\b0 , clicking the remove button removes the discount.\par
+\par
+The \b applyDiscount \b0 function is called with an empty string '' and 0 as the percentage, effectively removing any existing discount.\par
+\par
+An alert is shown with the message "Discount removed."\par
+\par
+\ul\b Updated to reduce item quantities in the database upon checkout (Code in CheckoutButton).\par
+\ulnone\par
+\b0 First we check the quantities in the DB.\par
+\par
+This converts item IDs to strings for consistency (was having lots of issues getting this working when it was integers). \par
+\par
+\b const cartItemsWithStringIds = cartItems.map(item => (\{\par
+    ...item,\par
+    id: String(item.id)\par
+\}));\par
+\b0\par
+This takes the IDs from the cart items\par
+\par
+\b const itemIds = cartItemsWithStringIds.map(item => item.id);\par
+\b0\par
+Thsi sends a request to fetch item data by IDs\par
+\par
+\b const itemResponse = await axios.post('http://localhost:8082/items/getByIds', itemIds, \{\par
+    headers: \{ 'Content-Type': 'application/json' \}\par
+\});\par
+\b0\par
+This maps the fetched data with consistent ID types\par
+\par
+\b const itemDataList = itemResponse.data.map(item => (\{\par
+    ...item,\par
+    id: String(item.id)\par
+\}));\par
+\par
+\b0 This part calculates the new quantities by subtracting the quantity in the cart from the quantity available in the database:\par
+\par
+\b let isInsufficient = false;  \b0 (tracks if any item has insufficient stock)\b\par
+let updatePromises = [];     \b0 (stores the promises for updating quantities)\b\par
+\b0\par
+(loop through each item in the cart)\par
+\b for (let item of cartItemsWithStringIds) \{\par
+    const itemData = itemDataList.find(data => data.id === item.id); \b0 (gets the item from the fetched data\par
+    \b if (itemData) \{\par
+        const newQuantity = itemData.quantity - item.quantity; \b0 (subtracts the quantity from the retrieved DB quantity)\b\par
+        if (newQuantity < 0) \{\par
+\b0             (If the new quantity is less than 0, there's insufficient stock)\b\par
+            setAlertMessage(`Insufficient quantity for item $\{item.name\}`);\par
+            setShowAlert(true);\par
+            isInsufficient = true;\b0   (this flags that there is not enough stock)\b\par
+            break\par
+\b0         \}\par
+        (this adds the quantity to the updatepromises)\par
+        \b updatePromises.push(\{\par
+            id: item.id,\par
+            quantity: newQuantity\par
+        \});\par
+\b0     \}\par
+\}\par
+\par
+\b if (updatePromises.length > 0) \{\par
+\b0 (this creates a list of promises to update each items quantity)\par
+    \b const updatePromisesQuantity = updatePromises.map(item =>\par
+        axios.patch(`http://localhost:8082/item/update/$\{item.id\}`, \{ quantity: item.quantity \})\par
+    );\par
+\b0\par
+\b     try \{\par
+        (this executes all the update requests)\par
+        await Promise.all(updatePromisesQuantity);\par
+    \} catch (error) \{\par
+\b0          (If any of the updates fail, show an error message)\b\par
+        setAlertMessage('Failed to update item quantities. Please try again.');\par
+        setShowAlert(true);\par
+        return;\par
+    \}\par
+\}\par
+\b0\par
+\par
+\ul\b Adjusted subtotal field to display two decimal points (Code in CartSummary).\ulnone\par
+\b0\par
+Don't think I need to explain this one either :)\par
+\par
+\ul\b Updated to only provide the order ID for new carts (Code is in CheckoutButton). \par
+\par
+\ulnone\b0 The code first attempts to retrieve an existing cartId from localStorage.\par
+\par
+If checkoutId is not found, this indicates that the cart is new and hasn't been checked out before.\par
+\par
+\b let checkoutId = localStorage.getItem('cartId');\par
+\b0\par
+If there is no existing checkoutId, it means the cart is new. The code then makes a POST request to create a new cart in the database, passing the items, status, and discount information.\par
+\par
+If the request is successful, it stores the new checkoutId in localStorage under the key checkoutID.\par
+\par
+The retrievedID key, if it exists, is removed since this is a new cart.\par
+\par
+\b if (!checkoutId) \{\par
+    const response = await axios.post('http://localhost:8083/cart/add', \{\par
+        items: cartItemsWithStringIds,\par
+        status: 'Completed',\par
+        discountCode: discountCode, \par
+        discountPercentage: discountPercentage \par
+    \}, \{\par
+        headers: \{ 'Content-Type': 'application/json' \}\par
+    \});\par
+\par
+    if (response.status === 201) \{\par
+        checkoutId = response.data;\par
+        localStorage.setItem('checkoutID', checkoutId);\par
+        localStorage.removeItem('retrievedID');\par
+    \} else \{\par
+        setAlertMessage("Failed to create a new cart. Please try again.");\par
+        setShowAlert(true);\par
+        return;\par
+    \}\par
+\}\par
+\par
+\b0 If a checkoutId is found, the code assumes the cart is existing or retrieved.  It then stores this checkoutId under the key retrievedID in localStorage, and removes any checkoutID.\par
+This ensures that the system recognizes this as a previously created cart.\par
+\par
+\b else \{\par
+    localStorage.setItem('retrievedID', checkoutId);\par
+    localStorage.removeItem('checkoutID');\par
+\}\par
+\par
+\b0 After successfully completing the checkout process, the code checks whether checkoutID or retrievedID exists in localStorage.\par
+\par
+If checkoutID exists, it displays a message including the order ID, since this is a newly created cart.\par
+\par
+If only retrievedID exists, it simply displays a generic "Checkout complete!" message, since this cart was already created previously, and thus the order ID isn't shown again.\par
+\par
+\b if (localStorage.getItem('checkoutID')) \{\par
+    setAlertMessage(`Checkout complete! Your order ID is $\{localStorage.getItem('checkoutID')\}`);\par
+\} else if (localStorage.getItem('retrievedID')) \{\par
+    setAlertMessage('Checkout complete!');\par
+\}\b0\par
+\par
+\ul\b Updated item card to show "10+" if stock exceeds 10 (Code is in ItemCard). \par
+\ulnone\par
+\b0 This line of code displays the available stock information for the item.  If the quantity of the item is greater than 10, it shows "10+" to. If the quantity is 10 or less, it shows the exact number.\par
+\par
+\b <p className="stock-info">\par
+    Stock Available: \{quantity > 10 ? '10+' : quantity\}\par
+</p>\par
+\b0\par
+\par
+I tidied up some of the  reusable code but probably still some more to be done. \par
+\par
+I also had to make some backend changes to add columns for discountcode and discountpercentage and changed the get function so that it pulls the full cart rather than just items.\par
+\par
+\ul\b Ideas for future development \par
+\par
+\ulnone\b0 Here's some things I wanted to get to but didn't have time: \par
+\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720\sl240\slmult1 Clearing the discount code input field when you save a cart or checkout. \par
+{\pntext\f1\'B7\tab}Adding multiple discount codes.\par
+{\pntext\f1\'B7\tab}Checking if the item is still available when you retrieve an old cart and letting you know that it's either not in stock or no longer exists (at the moment it will pull anything that was previously saved in the DB but will show the quantity as an empty field).  This should only be applicable to in progress carts, Completed carts should not be affected as they will be in order history. \par
+{\pntext\f1\'B7\tab}I still don't use branches (I'm still scared of them, so everythings been pushed to main). \par
+
+\pard\sl240\slmult1\par
+I've been using these test scenarios when making updates to cart stuff so you could maybe reuse and add to these? \par
+\par
+\ul\b Test scenarios\ulnone\b0\par
+\par
+Scenario 1\par
+\par
+Add multiple products to cart and then save (no discount). Saves, gives orderID, doesn't change stock levels, sets in progress in DB. \par
+Retrieve the above basket.  Retrieves, gives totals correctly. \par
+Checkout the basket. Clears storage, gives message success, changes from in progress to complete in DB, updates stock levels. \par
+Retrieve basket, shows correct orderhistory, cannot update cart message in cart page. \par
+\par
+Scenario 2\par
+\par
+Add multiple products to cart and then save (no discount). Saves, gives orderID, doesn't change stock levels, sets in progress in DB. \par
+Retrieve the above basket.  Retrieves, gives totals correctly. \par
+Update basket and save (no discount) saves, gives updated message, no change in stock or status in db.\par
+Retrieve basket.  Retrieves, gives new totals correctly. \par
+Checkout the basket. Clears storage, gives message success, changes from in progress to complete in DB\par
+\par
+Scenario 3\par
+\par
+Add multiple products to cart and then checkout (no discount). Saves, gives orderID, changes stock levels, sets complete in DB. \par
+Retrieve basket, shows correct orderhistory, cannot update cart message in cart page. \par
+\par
+Scenario 4\par
+\par
+Add multiple products to cart and then save (with discount). Saves, gives orderID, doesn't change stock levels, sets in progress in DB, adds discount to DB. \par
+Retrieve the above basket.  Retrieves, gives totals correctly including discount . \par
+Checkout the basket. Clears storage, gives message success, changes from in progress to complete in DB.\par
+Retrieve basket, shows correct orderhistory including discount, cannot update cart message in cart page. \par
+\par
+Scenario 5\par
+\par
+Add multiple products to cart and then save (with discount). Saves, gives orderID, doesn't change stock levels, sets in progress in DB. \par
+Retrieve the above basket.  Retrieves, gives totals correctly including discount. \par
+Update basket and save, gives updated message, no change in stock or status in db.\par
+Retrieve basket.  Retrieves, gives new totals correctly. \par
+Checkout the basket. Clears storage, gives message success, changes from in progress to complete in DB\par
+\par
+\par
+Scenario 6\par
+\par
+Add multiple products to cart and then checkout with discount. Saves, gives orderID, changes stock levels, sets complete in DB. \par
+Retrieve basket, shows correct orderhistory, cannot update cart message in cart page. \par
+Retrieve basket, shows correct orderhistory including discount, cannot update cart message in cart page. \par
+\par
+}
+ 
