@@ -1,10 +1,11 @@
-body {
+.shop-body {
   position: relative;
   width: 90%;
   margin-left: 5%;
   margin-right: 5%;
-  height: 600px;
+
   padding-top: 120px;
+  box-sizing: border-box;
   
 }
 
@@ -12,10 +13,11 @@ body {
 .item-list {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 5%; 
+  gap: 20px; 
   justify-content: center; 
   padding: 10px; 
   margin-top: 80px; 
+  
 }
 
 .card {
@@ -23,20 +25,41 @@ body {
   border-radius: 8px;
   text-align: center;
   box-shadow: 0 8px 4px rgba(0, 0, 0, 0.2), 0 6px 20px rgba(0, 0, 0, 0.19);
-  display: flex; 
+  display: flex;
   flex-direction: column;
-  align-items: center; 
-  justify-content: space-between; 
-  box-sizing: border-box; 
-  height: 100%; 
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  height: 100%;
 }
 
+h2 {
+  height: 3em; /* Ensures the title height is consistent */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Limits title to 2 lines */
+  -webkit-box-orient: vertical;
+}
 
 .card-image {
   margin: 10px 0;
   width: 60px;
   height: 60px;
-  object-fit: cover; 
+  object-fit: contain; /* Ensures the entire image is visible */
+}
+
+.quantityContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+  flex-grow: 1; /* Ensures this section grows to fill available space */
+}
+
+.stock-info, .quantityContainer {
+  flex-grow: 1; /* Allows these sections to fill remaining space */
 }
 
 button {
@@ -64,16 +87,6 @@ button:disabled {
   margin: 0;
 }
 
-
-.quantityContainer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  margin-top: 16px;
-}
-
-
 .quantityLabel {
   font-weight: bold;
 }
@@ -85,9 +98,8 @@ button:disabled {
   border-radius: 4px;
   font-size: 16px;
   text-align: center;
-  box-sizing: border-box; 
+  box-sizing: border-box;
 }
-
 
 .outOfStock {
   padding-top: 50px;
@@ -95,7 +107,6 @@ button:disabled {
   margin: 0;
   padding-bottom: 10px;
 }
-
 
 @media (max-width: 1200px) {
   .item-list {
@@ -105,69 +116,6 @@ button:disabled {
 
 @media (max-width: 768px) {
   .item-list {
-    grid-template-columns: 1fr; 
-  }
-}
-
-.popup-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); 
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000; 
-}
-
-
-.popup {
-  position: fixed;
-  background-color: white;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 8px 4px rgba(0, 0, 0, 0.2), 0 6px 20px rgba(0, 0, 0, 0.19);
-  max-width: 400px;
-  width: 90%;
-  text-align: center;
-  z-index: 1001;
- 
-}
-
-
-@keyframes popup-animation {
-  from {
-      transform: scale(0.5);
-      opacity: 0;
-  }
-  to {
-      transform: scale(1);
-      opacity: 1;
-  }
-}
-
-.popup button {
-  background-color: goldenrod; 
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  margin: 10px 5px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.popup button:hover {
-  background-color: #cc9900; }
-
-
-@media (max-width: 600px) {
-  .popup {
-      width: 80%;
+    grid-template-columns: 1fr;
   }
 }

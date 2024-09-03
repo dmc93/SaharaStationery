@@ -19,7 +19,7 @@ const ShopPage = () => {
   if (error) return <div>Error loading items: {error.message}</div>;
 
   return (
-    <div className="body">
+    <div className="shop-body">
       <ItemFilter items={items} onFilter={handleFilter} /> {/* Add the ItemFilter component */}
       {Array.isArray(filteredItems) && <ItemList items={filteredItems} />} {/* Pass filteredItems to ItemList */}
     </div>

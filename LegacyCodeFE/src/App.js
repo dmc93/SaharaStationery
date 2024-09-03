@@ -7,6 +7,8 @@ import ShopPage from './pages/ShopPage';
 import Admin from './pages/Admin';
 import OrderHistory from './pages/OrderHistory'; 
 import { CartProvider } from './components/CartContext'; 
+import Footer from './components/Footer';
+
 
 function App() {
   return (
@@ -22,6 +24,7 @@ function App() {
             <Route path="/order-history" element={<OrderHistory />} /> 
           </Routes>
         </CartProvider>
+        <Footer/>
       </BrowserRouter>
     </div>
   );

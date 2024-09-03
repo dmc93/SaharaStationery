@@ -42,11 +42,12 @@ const ItemCard = ({ id, name, price, imageUrl, quantity, category }) => {
 
     return (
         <div className="card">
-            <h2>{name}</h2>
-            <h3>£{price?.toFixed(2)}</h3>
+            <h2 title={name}>{name}</h2>
+            
             <p>Category: {category}</p>
             <img className="card-image" src={imageUrl} alt={name} height={"50px"} />
             <br />
+            <h3>£{price?.toFixed(2)}</h3>
             <p className="stock-info">
                 Stock Available: {quantity > 10 ? '10+' : quantity}
             </p>
