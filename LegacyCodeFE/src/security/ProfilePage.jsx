@@ -24,6 +24,12 @@ function ProfilePage() {
 
     return (
         <div className="profile-page-container">
+                        <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+
             <h2>Profile Information</h2>
             <p>Name: {profileInfo.name}</p>
             <p>Email: {profileInfo.email}</p>
