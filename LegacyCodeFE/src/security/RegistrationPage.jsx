@@ -35,7 +35,7 @@ function RegistrationPage() {
                 city: ''
             });
             alert('User registered successfully');
-            navigate('/admin/user-management');
+            navigate('/user-management');
 
         } catch (error) {
             console.error('Error registering user:', error);
