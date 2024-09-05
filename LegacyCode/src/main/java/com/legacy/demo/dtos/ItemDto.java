@@ -8,30 +8,48 @@ public class ItemDto {
     private Double price;
     private Integer quantity;
     private String imageUrl;
-    private String category;  // Add the category field
+    private String category;
 
-    public ItemDto(Integer id, String name, Double price, Integer quantity, String imageUrl, String category) {
+    // Fields for displaying average rating data
+    private Integer totalRatingsCount;
+    private Integer totalRatingSum;
+    private Double averageRating;
+
+    // New field to handle individual rating submissions (only for input)
+    private Integer rating;  // This will be used when submitting a new rating
+
+    // Default constructor
+    public ItemDto() {
+        super();
+    }
+
+    // Constructor for fetching items (including rating info)
+    public ItemDto(Integer id, String name, Double price, Integer quantity, String imageUrl, String category,
+                   Integer totalRatingsCount, Integer totalRatingSum) {
         super();
         this.id = id;
         this.name = name;
         this.price = price;
         this.quantity = quantity;
-        this.imageUrl  =  imageUrl;
-        this.category = category;  // Initialize the category field
+        this.imageUrl  = imageUrl;
+        this.category = category;
+        this.totalRatingsCount = totalRatingsCount;
+        this.totalRatingSum = totalRatingSum;
+        this.averageRating = (totalRatingsCount == 0) ? 0.0 : (double) totalRatingSum / totalRatingsCount;
     }
 
-    public ItemDto() {
-        super();
-    }
-
-    public ItemDto(Item item){
+    // Constructor to convert from Item entity to ItemDto
+    public ItemDto(Item item) {
         super();
         this.id = item.getId();
         this.name = item.getName();
         this.price = item.getPrice();
         this.quantity = item.getQuantity();
         this.imageUrl = item.getImageUrl();
-        this.category = item.getCategory();  // Set the category field from the entity
+        this.category = item.getCategory();
+        this.totalRatingsCount = item.getTotalRatingsCount();
+        this.totalRatingSum = item.getTotalRatingSum();
+        this.averageRating = item.getAverageRating();  // Calls the transient method in the entity
     }
 
     // Getters and Setters
@@ -81,5 +99,39 @@ public class ItemDto {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    // Ratings related fields
+    public Integer getTotalRatingsCount() {
+        return totalRatingsCount;
+    }
+
+    public void setTotalRatingsCount(Integer totalRatingsCount) {
+        this.totalRatingsCount = totalRatingsCount;
+    }
+
+    public Integer getTotalRatingSum() {
+        return totalRatingSum;
+    }
+
+    public void setTotalRatingSum(Integer totalRatingSum) {
+        this.totalRatingSum = totalRatingSum;
+    }
+
+    public Double getAverageRating() {
+        return averageRating;
+    }
+
+    public void setAverageRating(Double averageRating) {
+        this.averageRating = averageRating;
+    }
+
+    // Getter and setter for rating (input for user rating submission)
+    public Integer getRating() {
+        return rating;
+    }
+
+    public void setRating(Integer rating) {
+        this.rating = rating;
     }
 }

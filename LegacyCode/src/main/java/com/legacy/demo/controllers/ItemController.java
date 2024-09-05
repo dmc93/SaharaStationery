@@ -1,9 +1,9 @@
 package com.legacy.demo.controllers;
 
+import com.legacy.demo.dtos.ItemDto;
 import com.legacy.demo.entities.Item;
 import com.legacy.demo.services.ItemService;
-import com.legacy.demo.dtos.ItemDto;
-
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,8 +46,7 @@ public class ItemController {
     }
 
     @PatchMapping("/item/update/{id}")
-    public ResponseEntity<?> updateItem(@PathVariable Integer id,
-                                        @RequestBody Item itemUpdate) {
+    public ResponseEntity<?> updateItem(@PathVariable Integer id, @RequestBody Item itemUpdate) {
         return this.service.itemUpdate(
                 id,
                 itemUpdate.getName(),
@@ -57,4 +56,23 @@ public class ItemController {
                 itemUpdate.getCategory()
         );
     }
+
+    // Submit a rating for an item (directly pass the rating in ItemDto)
+    @PostMapping("/item/{id}/rate")
+    public ResponseEntity<?> rateItem(@PathVariable Integer id, @RequestBody ItemDto itemDto) {
+        // Validate the rating (ensure it's between 1 and 5)
+        if (itemDto.getRating() == null || itemDto.getRating() < 1 || itemDto.getRating() > 5) {
+            return new ResponseEntity<>("Invalid rating. Rating should be between 1 and 5.", HttpStatus.BAD_REQUEST);
+        }
+
+        // Pass the rating to the service
+        return this.service.rateItem(id, itemDto.getRating());
+    }
+
+    // Fetch the average rating of an item
+    @GetMapping("/item/{id}/average-rating")
+    public ResponseEntity<Double> getAverageRating(@PathVariable Integer id) {
+        return this.service.getAverageRating(id);
+    }
+
 }

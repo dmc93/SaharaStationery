@@ -7,9 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class ItemService {
@@ -21,12 +19,12 @@ public class ItemService {
     }
 
     public List<ItemDto> getAll() {
-        List<ItemDto> dtos = new ArrayList<>();
+        List<ItemDto> dto = new ArrayList<>();
         List<Item> found = this.repo.findAll();
         for (Item item : found) {
-            dtos.add(new ItemDto(item));
+            dto.add(new ItemDto(item));  // Convert Item to ItemDto
         }
-        return dtos;
+        return dto;
     }
 
     public ResponseEntity<?> getItem(Integer id) {
@@ -34,16 +32,16 @@ public class ItemService {
         if (found.isEmpty()) {
             return new ResponseEntity<>("No Item found with id " + id, HttpStatus.NOT_FOUND);
         }
-        return ResponseEntity.ok(new ItemDto(found.get()));
+        return ResponseEntity.ok(new ItemDto(found.get()));  // Convert Item to ItemDto
     }
 
     public ResponseEntity<List<ItemDto>> getItemsByIds(List<Integer> ids) {
         List<Item> items = (List<Item>) this.repo.findAllById(ids); // Use findAllById
-        List<ItemDto> itemDtos = new ArrayList<>();
+        List<ItemDto> itemDto = new ArrayList<>();
         for (Item item : items) {
-            itemDtos.add(new ItemDto(item));
+            itemDto.add(new ItemDto(item));
         }
-        return ResponseEntity.ok(itemDtos);
+        return ResponseEntity.ok(itemDto);
     }
 
     public ResponseEntity<ItemDto> addItem(Item newItem) {
@@ -82,5 +80,42 @@ public class ItemService {
 
         Item updated = this.repo.save(toUpdate);
         return ResponseEntity.ok(new ItemDto(updated));
+    }
+
+    // Handle rating submission
+    // Handle rating submission
+    public ResponseEntity<?> rateItem(Integer id, Integer rating) {
+        Optional<Item> found = this.repo.findById(id);
+        if (found.isEmpty()) {
+            return new ResponseEntity<>("No Item found with id " + id, HttpStatus.NOT_FOUND);
+        }
+
+        Item item = found.get();
+
+        // Update total rating count and sum
+        item.setTotalRatingsCount(item.getTotalRatingsCount() + 1);
+        item.setTotalRatingSum(item.getTotalRatingSum() + rating);
+
+        // Save the updated item
+        this.repo.save(item);
+
+        // Return the updated rating data in the response
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put("averageRating", item.getAverageRating());
+        responseBody.put("totalRatingsCount", item.getTotalRatingsCount());
+
+        return ResponseEntity.ok(responseBody);
+    }
+
+
+    // Get the average rating of an item
+    public ResponseEntity<Double> getAverageRating(Integer id) {
+        Optional<Item> found = this.repo.findById(id);
+        if (found.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        Item item = found.get();
+        return ResponseEntity.ok(item.getAverageRating());
     }
 }

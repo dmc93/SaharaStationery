@@ -13,6 +13,9 @@ public class Item {
     private String imageUrl;
     private String category;
 
+    private Integer totalRatingsCount = 0;  // Number of ratings received
+    private Integer totalRatingSum = 0;     // Sum of all ratings (to calculate average)
+
     public Item() {
     }
 
@@ -33,6 +36,33 @@ public class Item {
         this.imageUrl = imageUrl;
         this.category = category;
     }
+
+
+    public Integer getTotalRatingsCount() {
+        return totalRatingsCount;
+    }
+
+    public void setTotalRatingsCount(Integer totalRatingsCount) {
+        this.totalRatingsCount = totalRatingsCount;
+    }
+
+    public Integer getTotalRatingSum() {
+        return totalRatingSum;
+    }
+
+    public void setTotalRatingSum(Integer totalRatingSum) {
+        this.totalRatingSum = totalRatingSum;
+    }
+
+    // Method to calculate average rating
+    @Transient
+    public Double getAverageRating() {
+        if (totalRatingsCount == null || totalRatingsCount == 0) {
+            return 0.0;
+        }
+        return (totalRatingSum == null ? 0 : (double) totalRatingSum) / totalRatingsCount;
+    }
+
 
     public Integer getId() {
         return id;
