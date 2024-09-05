@@ -58,6 +58,12 @@ function UpdateUser() {
 
   return (
     <div className="auth-container">
+                  <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+
       <h2>Update User</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
