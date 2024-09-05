@@ -47,7 +47,7 @@ function UpdateUser() {
         const res = await UserService.updateUser(userId, userData, token);
         console.log(res)
         // Redirect to profile page or display a success message
-        navigate("/admin/user-management")
+        navigate("/user-management")
       // }
 
     } catch (error) {
