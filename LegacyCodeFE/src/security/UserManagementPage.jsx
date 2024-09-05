@@ -42,6 +42,12 @@ function UserManagementPage() {
 
   return (
     <div className="user-management-container">
+                  <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+
       <h2>Users Management Page</h2>
       <button className='reg-button'> <Link to="/register">Add User</Link></button>
       <table>
