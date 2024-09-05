@@ -78,6 +78,9 @@ useEffect(() => {
                         <Link to="/user-management">User</Link>
                     </li>}
                     {isAuthenticated && <li className="nav-item">
+                        <Link to="/chat">Chat with AI</Link>
+                    </li>}
+                    {isAuthenticated && <li className="nav-item">
                         <Link to="/" onClick={handleLogout}>Logout</Link>
                     </li>}
                 </ul>

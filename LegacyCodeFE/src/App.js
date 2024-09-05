@@ -15,6 +15,7 @@ import UpdateUser from './security/UpdateUser';
 import UserService from './security/UserService';
 import UserManagementPage from './security/UserManagementPage';
 import ProfilePage from './security/ProfilePage';
+import Chatbot from './components/Chatbot';
 
 function App() {
   return (
@@ -37,6 +38,9 @@ function App() {
                 <Route path="/user-management" element={<UserManagementPage />} />
                 <Route path="/update-user/:userId" element={<UpdateUser />} />
                 <Route path="/product" element={<Admin />} />
+
+                <Route path="/chat" element={<Chatbot />} />
+
                 {/* </>
             )} */}
             <Route path="*" element={<Navigate to="/login" />} />
