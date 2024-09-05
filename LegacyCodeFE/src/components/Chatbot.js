@@ -23,11 +23,23 @@ console.log(prompt)
 
     return(
         <div>
-            <form  onSubmit={handleSubmit}>
+                    <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+
+            <form align="center" onSubmit={handleSubmit}>
                 <input type="text" value={prompt} onChange={(e) => setPrompt(e.target.value)}/>
                 <br/>
                 <button type="submit"> Submit </button>
             </form>
+                <br/>
             <div>
                 <p>
                     Response from OpenAI:   {response} 
