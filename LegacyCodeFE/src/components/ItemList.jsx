@@ -12,14 +12,17 @@ const ItemList = ({ items }) => {
             {items.length > 0 ? (
                 items.map((item) => (
                     <ItemCard
-                        key={item.id}
-                        id={item.id}
-                        name={item.name}
-                        price={item.price}
-                        imageUrl={item.imageUrl}
-                        quantity={item.quantity}
-                        category={item.category}
+                    key={item.id} 
+                    id={item.id}
+                    name={item.name}
+                    price={item.price}
+                    imageUrl={item.imageUrl}
+                    quantity={item.quantity}
+                    category={item.category}
+                    averageRating={item.averageRating}
+                    totalRatingsCount={item.totalRatingsCount}
                     />
+
                 ))
             ) : (
                 <p className='noitems'>No items available</p>

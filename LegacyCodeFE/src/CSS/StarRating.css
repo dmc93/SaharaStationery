@@ -1,0 +1,46 @@
+/* StarRating.css */
+
+.star-rating-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.star-rating {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.star-rating button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin: 0 5px;
+    font-size: 24px;
+    transition: transform 0.2s ease-in-out;
+}
+
+.star-rating button:hover {
+    transform: scale(1.2);  /* Slightly enlarge the star on hover */
+}
+
+.star-rating button.on .star {
+    color: gold;  /* Filled star color */
+}
+
+.star-rating button.off .star {
+    color: lightgray;  /* Empty star color */
+}
+
+.star-rating button:focus {
+    outline: none;  /* Remove the focus outline */
+}
+
+.ratings-count {
+    margin-top: 8px;
+    font-size: 14px;
+    color: #555;
+}

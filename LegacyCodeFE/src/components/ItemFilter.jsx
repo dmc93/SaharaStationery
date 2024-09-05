@@ -115,7 +115,7 @@ function ItemFilter({ items, onFilter }) {
             <Row>
               <Col md={6}>
                 <Form.Group controlId="minPrice" className="form-group">
-                  <Form.Label className="form-label">Min Price:</Form.Label>
+                  <Form.Label className="form-label">Min Price: </Form.Label>
                   <Form.Control
                     type="number"
                     name="minPrice"
@@ -127,7 +127,7 @@ function ItemFilter({ items, onFilter }) {
               </Col>
               <Col md={6}>
                 <Form.Group controlId="maxPrice" className="form-group">
-                  <Form.Label className="form-label">Max Price:</Form.Label>
+                  <Form.Label className="form-label">Max Price: </Form.Label>
                   <Form.Control
                     type="number"
                     name="maxPrice"
@@ -141,7 +141,7 @@ function ItemFilter({ items, onFilter }) {
             <Row>
               <Col md={6}>
                 <Form.Group controlId="category" className="form-group">
-                  <Form.Label className="form-label">Category:</Form.Label>
+                  <Form.Label className="form-label">Category: </Form.Label>
                   <Form.Control
                     as="select"
                     name="category"
@@ -160,7 +160,7 @@ function ItemFilter({ items, onFilter }) {
               </Col>
               <Col md={6}>
                 <Form.Group controlId="sort" className="form-group">
-                  <Form.Label className="form-label">Sort By:</Form.Label>
+                  <Form.Label className="form-label">Sort By: </Form.Label>
                   <Form.Control
                     as="select"
                     name="sort"
@@ -176,7 +176,7 @@ function ItemFilter({ items, onFilter }) {
                 </Form.Group>
               </Col>
             </Row>
-            <Button variant="primary" type="submit" className="mt-3 w-100">
+            <Button variant="primary" type="submit" className="mt-3 w-100" style={{marginRight: "1em"}}>
               Apply Filters
             </Button>
             <Button variant="secondary" onClick={handleClearFilters} className="mt-2 w-100">
