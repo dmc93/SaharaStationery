@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import { useNavigate } from "react-router-dom";
 import UserService from "./UserService";
+import '../CSS/LoginPage.css'
 
 function LoginPage(){
 const [email, setEmail] = useState('')
@@ -35,10 +36,8 @@ const handleSubmit = async (e) => {
     return(
         <div className="auth-container">
                         <br/>
-            <br/>
-            <br/>
-            <br/>
-            <br/>
+            
+           
 
             <h2>Login</h2>
             {error && <p className="error-message">{error}</p>}
@@ -55,10 +54,9 @@ const handleSubmit = async (e) => {
             </form>
 <div>
 <br/>
-    <h1>Note:</h1><br/><br/>
-    <h3>Use below details to login:</h3><br/>
-    <h4>Admin user: admin@sahara.com/admin<br/>
-    Non-Admin user: user1@sahara.com/user1</h4>
+    <h3>Use below details to login:</h3>
+    <h5>Admin</h5>email: admin@sahara.com<br/>password: admin<br/>
+    <h5>Non-Admin</h5>email: user1@sahara.com<br/>password: user1
 </div> 
 
         </div>
