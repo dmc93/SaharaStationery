@@ -13,24 +13,28 @@ const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-        const userData = await UserService.login(email, password)
-        console.log(userData)
+        const userData = await UserService.login(email, password);
+        console.log(userData);
         if (userData.token) {
-            localStorage.setItem('token', userData.token)
-            localStorage.setItem('role', userData.role)
-            navigate('/home')
-        }else{
-            setError(userData.message)
+            localStorage.setItem('token', userData.token);
+            localStorage.setItem('role', userData.role);
+
+            // Trigger the storage event manually to update other components
+            window.dispatchEvent(new Event('storage'));
+
+            navigate('/home');
+        } else {
+            setError(userData.message);
         }
-        
     } catch (error) {
-        console.log(error)
-        setError(error.message)
-        setTimeout(()=>{
+        console.log(error);
+        setError(error.message);
+        setTimeout(() => {
             setError('');
         }, 5000);
     }
-}
+};
+
 
 
     return(
