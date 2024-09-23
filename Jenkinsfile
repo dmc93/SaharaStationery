@@ -25,13 +25,13 @@ pipeline {
             }
         }
 
-        // stage('Delete pm2 instances') {
-        //     steps {
-        //         bat '''
-        //         pm2 delete all || echo "No PM2 processes running"
-        //         '''
-        //     }
-        // }
+        stage('Delete pm2 instances') {
+            steps {
+                bat '''
+                pm2 delete all || echo "No PM2 processes running"
+                '''
+            }
+        }
 
         stage('Run Frontend') {
             steps {
