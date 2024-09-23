@@ -17,23 +17,24 @@ pipeline {
         stage('Install Frontend Dependencies') {
             steps {
                 // Navigate to the LegacyCodeFE directory and install dependencies
-                bat '''
-                cd LegacyCodeFE
-                npm install
-                '''
+                dir('LegacyCodeFE') {
+                    bat '''
+                    npm install
+                    '''
+                }
             }
         }
 
-        
-
         stage('Run Frontend') {
-    steps {
-        bat '''
-        pm2 start "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" -- start
-        '''
-    }
-}
-
+            steps {
+                // Navigate to the LegacyCodeFE directory and start the frontend using PM2
+                dir('LegacyCodeFE') {
+                    bat '''
+                    pm2 start "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" -- start
+                    '''
+                }
+            }
+        }
 
         stage('Build and Run LegacyCode Backend') {
             steps {
