@@ -25,6 +25,15 @@ pipeline {
             }
         }
 
+        stage('Delete pm2 instances') {
+           steps {
+            bat '''
+            pm2 delete all
+            '''
+
+           }
+       }
+
         stage('Run Frontend') {
             steps {
                 // Navigate to the LegacyCodeFE directory and start the frontend using PM2
@@ -36,31 +45,44 @@ pipeline {
             }
         }
 
-        // stage('Build and Run LegacyCode Backend') {
-        //     steps {
-        //         // Navigate to LegacyCode and build Spring Boot application
-        //         dir('LegacyCode') {
-        //             bat '''
-        //             set USERPROFILE=%USERPROFILE%
-        //             ./mvnw clean install
-        //             java -jar target\\*.jar
-        //             '''
-        //         }
-        //     }
-        // }
+        stage('Build and Run LegacyCode Backend') {
+            steps {
+                // Navigate to LegacyCode and build Spring Boot application
+                dir('LegacyCode') {
+                    bat '''
+                    set USERPROFILE=%USERPROFILE%
+                    ./mvnw clean install
+                    java -jar target\\*.jar
+                    '''
+                }
+            }
+        }
 
-        // stage('Build and Run LegacyCodeCart Backend') {
-        //     steps {
-        //         // Navigate to LegacyCodeCart and build Spring Boot application
-        //         dir('LegacyCodeCart') {
-        //             bat '''
-        //             set USERPROFILE=%USERPROFILE%
-        //             ./mvnw clean install
-        //             java -jar target\\*.jar
-        //             '''
-        //         }
-        //     }
-        // }
+        stage('Build and Run LegacyCodeCart Backend') {
+            steps {
+                // Navigate to LegacyCodeCart and build Spring Boot application
+                dir('LegacyCodeCart') {
+                    bat '''
+                    set USERPROFILE=%USERPROFILE%
+                    ./mvnw clean install
+                    java -jar target\\*.jar
+                    '''
+                }
+            }
+        }
+
+        stage('Build and Run Security Backend') {
+            steps {
+                // Navigate to LegacyCodeCart and build Spring Boot application
+                dir('Security') {
+                    bat '''
+                    set USERPROFILE=%USERPROFILE%
+                    ./mvnw clean install
+                    java -jar target\\*.jar
+                    '''
+                }
+            }
+        }
     }
 
     post {
