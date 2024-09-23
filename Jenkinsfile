@@ -14,7 +14,7 @@ pipeline {
                 // Navigate to the LegacyCodeFE folder and run npm commands for the front end
                 dir('LegacyCodeFE') {
                     sh 'npm install'
-                    sh 'npm run build' // Replace this with your specific front-end build command if different
+                    sh 'npm start' // Replace this with your specific front-end build command if different
                 }
             }
         }
