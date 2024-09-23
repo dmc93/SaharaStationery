@@ -24,15 +24,7 @@ pipeline {
             }
         }
 
-        stage('Stop PM2 Processes') {
-            steps {
-                // Set USERPROFILE to prevent PM2 initialization errors and stop all PM2 processes
-                bat '''
-                set USERPROFILE=%USERPROFILE%
-                pm2 delete all || echo "No PM2 processes running"
-                '''
-            }
-        }
+        
 
         stage('Run Frontend') {
             steps {
