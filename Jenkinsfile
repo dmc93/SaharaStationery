@@ -27,14 +27,13 @@ pipeline {
         
 
         stage('Run Frontend') {
-            steps {
-                // Start the frontend application using PM2
-                bat '''
-                set USERPROFILE=%USERPROFILE%
-                pm2 start npm --name "frontend" -- run start
-                '''
-            }
-        }
+    steps {
+        bat '''
+        pm2 start "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" -- start
+        '''
+    }
+}
+
 
         stage('Build and Run LegacyCode Backend') {
             steps {
