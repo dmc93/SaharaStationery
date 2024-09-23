@@ -2,14 +2,21 @@ pipeline {
     agent any
 
     environment {
-        // Define the path to Node.js and PM2 if needed
-        PATH = "${env.PATH};C:\\Program Files\\nodejs;C:\\Program Files\\nodejs\\node_modules\\npm\\bin"
+        // Set USERPROFILE environment variable to ensure PM2 uses the correct path on Windows
+        USERPROFILE = "${env.USERPROFILE}" // This defaults to the current user's profile directory
     }
 
     stages {
-        stage('Install Dependencies') {
+        stage('Checkout') {
             steps {
-                // Running npm install to install dependencies
+                // Checkout the code from the Git repository
+                checkout scm
+            }
+        }
+
+        stage('Install Frontend Dependencies') {
+            steps {
+                // Navigate to the LegacyCodeFE directory and install dependencies
                 bat '''
                 cd LegacyCodeFE
                 npm install
@@ -19,8 +26,9 @@ pipeline {
 
         stage('Stop PM2 Processes') {
             steps {
-                // Stopping all running PM2 processes
+                // Set USERPROFILE to prevent PM2 initialization errors and stop all PM2 processes
                 bat '''
+                set USERPROFILE=%USERPROFILE%
                 pm2 delete all || echo "No PM2 processes running"
                 '''
             }
@@ -28,56 +36,49 @@ pipeline {
 
         stage('Run Frontend') {
             steps {
-                // Starting the front-end application using PM2
+                // Start the frontend application using PM2
                 bat '''
+                set USERPROFILE=%USERPROFILE%
                 pm2 start npm --name "frontend" -- run start
                 '''
             }
         }
 
-        stage('Build and Run Spring Boot Applications') {
-            parallel {
-                stage('Build and Run LegacyCode') {
-                    steps {
-                        // Build and run Spring Boot application from LegacyCode
-                        dir('LegacyCode') {
-                            bat 'mvnw clean install' // Adjust command if mvnw is not present or maven is installed
-                            bat 'java -jar target\\*.jar'
-                        }
-                    }
+        stage('Build and Run LegacyCode Backend') {
+            steps {
+                // Navigate to LegacyCode and build Spring Boot application
+                dir('LegacyCode') {
+                    bat '''
+                    set USERPROFILE=%USERPROFILE%
+                    ./mvnw clean install
+                    java -jar target\\*.jar
+                    '''
                 }
+            }
+        }
 
-                stage('Build and Run LegacyCodeCart') {
-                    steps {
-                        // Build and run Spring Boot application from LegacyCodeCart
-                        dir('LegacyCodeCart') {
-                            bat 'mvnw clean install' // Adjust command if mvnw is not present or maven is installed
-                            bat 'java -jar target\\*.jar'
-                        }
-                    }
-                }
-
-                stage('Build and Run Security') {
-                    steps {
-                        // Build and run Spring Boot application from LegacyCodeCart
-                        dir('Security') {
-                            bat 'mvnw clean install' // Adjust command if mvnw is not present or maven is installed
-                            bat 'java -jar target\\*.jar'
-                        }
-                    }
+        stage('Build and Run LegacyCodeCart Backend') {
+            steps {
+                // Navigate to LegacyCodeCart and build Spring Boot application
+                dir('LegacyCodeCart') {
+                    bat '''
+                    set USERPROFILE=%USERPROFILE%
+                    ./mvnw clean install
+                    java -jar target\\*.jar
+                    '''
                 }
             }
         }
     }
 
     post {
-        failure {
-            // Actions on failure, such as sending notifications or cleaning up
-            echo 'Build failed, please check logs.'
-        }
         always {
-            // Actions that run after every build, like archiving logs or reports
-            echo 'Pipeline finished.'
+            // Output message to indicate the end of the pipeline
+            echo 'Pipeline completed.'
+        }
+        failure {
+            // Output message in case of pipeline failure
+            echo 'Build failed, please check logs.'
         }
     }
 }
