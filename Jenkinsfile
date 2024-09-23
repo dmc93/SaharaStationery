@@ -43,6 +43,20 @@ pipeline {
             }
         }
 
+        stage('Build and Run LegacyCodeCart Backend') {
+            steps {
+                dir('LegacyCodeCart') {
+                    bat '''
+                    set USERPROFILE=%USERPROFILE%
+                    del /Q target\\Items-BE-0.0.1-SNAPSHOT.jar || echo "No previous JAR files to delete"
+                    ./mvnw clean install -DskipTests
+                    java -jar target\\Items-BE-0.0.1-SNAPSHOT.jar > run.log 2>&1
+                    '''
+                    bat 'type run.log'
+                }
+            }
+        }
+        
         stage('Build and Run LegacyCode Backend') {
             steps {
                 dir('LegacyCode') {
@@ -58,19 +72,7 @@ pipeline {
             }
         }
 
-        stage('Build and Run LegacyCodeCart Backend') {
-            steps {
-                dir('LegacyCodeCart') {
-                    bat '''
-                    set USERPROFILE=%USERPROFILE%
-                    del /Q target\\Items-BE-0.0.1-SNAPSHOT.jar || echo "No previous JAR files to delete"
-                    ./mvnw clean install -DskipTests
-                    java -jar target\\Items-BE-0.0.1-SNAPSHOT.jar > run.log 2>&1
-                    '''
-                    bat 'type run.log'
-                }
-            }
-        }
+        
 
         stage('Build and Run Security Backend') {
             steps {
