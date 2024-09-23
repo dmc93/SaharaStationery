@@ -36,31 +36,31 @@ pipeline {
             }
         }
 
-        stage('Build and Run LegacyCode Backend') {
-            steps {
-                // Navigate to LegacyCode and build Spring Boot application
-                dir('LegacyCode') {
-                    bat '''
-                    set USERPROFILE=%USERPROFILE%
-                    ./mvnw clean install
-                    java -jar target\\*.jar
-                    '''
-                }
-            }
-        }
+        // stage('Build and Run LegacyCode Backend') {
+        //     steps {
+        //         // Navigate to LegacyCode and build Spring Boot application
+        //         dir('LegacyCode') {
+        //             bat '''
+        //             set USERPROFILE=%USERPROFILE%
+        //             ./mvnw clean install
+        //             java -jar target\\*.jar
+        //             '''
+        //         }
+        //     }
+        // }
 
-        stage('Build and Run LegacyCodeCart Backend') {
-            steps {
-                // Navigate to LegacyCodeCart and build Spring Boot application
-                dir('LegacyCodeCart') {
-                    bat '''
-                    set USERPROFILE=%USERPROFILE%
-                    ./mvnw clean install
-                    java -jar target\\*.jar
-                    '''
-                }
-            }
-        }
+        // stage('Build and Run LegacyCodeCart Backend') {
+        //     steps {
+        //         // Navigate to LegacyCodeCart and build Spring Boot application
+        //         dir('LegacyCodeCart') {
+        //             bat '''
+        //             set USERPROFILE=%USERPROFILE%
+        //             ./mvnw clean install
+        //             java -jar target\\*.jar
+        //             '''
+        //         }
+        //     }
+        // }
     }
 
     post {
