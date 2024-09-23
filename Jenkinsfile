@@ -56,6 +56,16 @@ pipeline {
                         }
                     }
                 }
+
+                stage('Build and Run Security') {
+                    steps {
+                        // Build and run Spring Boot application from LegacyCodeCart
+                        dir('Security') {
+                            bat 'mvnw clean install' // Adjust command if mvnw is not present or maven is installed
+                            bat 'java -jar target\\*.jar'
+                        }
+                    }
+                }
             }
         }
     }
