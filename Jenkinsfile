@@ -48,7 +48,8 @@ pipeline {
                 dir('LegacyCode') {
                     bat '''
                     set USERPROFILE=%USERPROFILE%
-                    ./mvnw clean install
+                    del /Q target\\*.jar || echo "No previous JAR files to delete"
+                    ./mvnw clean install -DskipTests
                     java -jar target\\*.jar
                     '''
                 }
@@ -60,7 +61,8 @@ pipeline {
                 dir('LegacyCodeCart') {
                     bat '''
                     set USERPROFILE=%USERPROFILE%
-                    ./mvnw clean install
+                    del /Q target\\*.jar || echo "No previous JAR files to delete"
+                    ./mvnw clean install -DskipTests
                     java -jar target\\*.jar
                     '''
                 }
@@ -73,7 +75,8 @@ pipeline {
                     bat '''
                     set USERPROFILE=%USERPROFILE%
                     set JAVA_HOME=%JAVA_HOME%
-                    ./mvnw clean install
+                    del /Q target\\*.jar || echo "No previous JAR files to delete"
+                    ./mvnw clean install -DskipTests
                     java -jar target\\*.jar
                     '''
                 }
