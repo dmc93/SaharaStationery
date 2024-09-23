@@ -8,8 +8,10 @@ pipeline {
             steps {
                 // Navigate to the LegacyCodeFE folder and run npm commands for the front end
                 dir('LegacyCodeFE') {
-                    sh 'npm install'
-                    sh 'npm start' // Replace this with your specific front-end build command if different
+                    bat '''
+                    npm install
+                    npm start 
+                    '''
                 }
             }
         }
@@ -19,8 +21,9 @@ pipeline {
                 // Navigate to the LegacyCode folder and build the Spring Boot application
                 dir('LegacyCode') {
                     // Build using Maven Wrapper or Gradle
-                    sh './mvnw clean install' // Adjust if using Maven installed on the server
-
+                    bat '''
+                    ./mvnw clean install
+                    '''
                 }
             }
         }
