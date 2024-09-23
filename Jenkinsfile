@@ -50,9 +50,9 @@ pipeline {
                     set USERPROFILE=%USERPROFILE%
                     del /Q target\\Items-BE-0.0.1-SNAPSHOT.jar || echo "No previous JAR files to delete"
                     ./mvnw clean install -DskipTests
-                    java -jar target\\Items-BE-0.0.1-SNAPSHOT.jar > run.log 2>&1
+                    java -jar target\\Items-BE-0.0.1-SNAPSHOT.jar 
                     '''
-                    bat 'type run.log'
+                   
                 }
             }
         }
@@ -64,10 +64,10 @@ pipeline {
                     set USERPROFILE=%USERPROFILE%
                     del /Q target\\Items-BE-0.0.1-SNAPSHOT.jar || echo "No previous JAR files to delete"
                     ./mvnw clean install -DskipTests
-                    java -jar target\\Items-BE-0.0.1-SNAPSHOT.jar > run.log 2>&1
+                    java -jar target\\Items-BE-0.0.1-SNAPSHOT.jar 
                     '''
                     // Display the last lines of the log file to see if the application started successfully
-                    bat 'type run.log'
+                    
                 }
             }
         }
@@ -82,9 +82,9 @@ pipeline {
                     set JAVA_HOME=%JAVA_HOME%
                     del /Q target\\usersmanagementsystem-0.0.1-SNAPSHOT.jar || echo "No previous JAR files to delete"
                     ./mvnw clean install -DskipTests
-                    java -jar target\\usersmanagementsystem-0.0.1-SNAPSHOT.jar > run.log 2>&1
+                    java -jar target\\usersmanagementsystem-0.0.1-SNAPSHOT.jar 
                     '''
-                    bat 'type run.log'
+                    
                 }
             }
         }
