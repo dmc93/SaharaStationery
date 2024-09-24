@@ -51,7 +51,8 @@ pipeline {
                      bat '''
                      set USERPROFILE=%USERPROFILE%
                      ./mvnw clean install
-                     java -jar target\\*.jar
+                     cd target/
+                    java -jar Items-BE-0.0.1-SNAPSHOT.jar 
                      '''
                  }
              }
