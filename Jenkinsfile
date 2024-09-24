@@ -51,8 +51,16 @@ pipeline {
                      bat '''
                      set USERPROFILE=%USERPROFILE%
                      ./mvnw clean install
-                     cd target/
-                    java -jar Items-BE-0.0.1-SNAPSHOT.jar 
+                    echo "Echo Build completed"
+                    // cd target/
+                   // java -jar Items-BE-0.0.1-SNAPSHOT.jar 
+                     '''
+                 }
+                 dir('target') {
+                     bat '''
+                    echo "Echo about to start jar file"
+                     java -jar Items-BE-0.0.1-SNAPSHOT.jar 
+                    echo "Echo done starting jar file"
                      '''
                  }
              }
