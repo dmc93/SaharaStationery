@@ -50,44 +50,45 @@ pipeline {
                     set USERPROFILE=%USERPROFILE%
                     del /Q target\\Items-BE-0.0.1-SNAPSHOT.jar || echo "No previous JAR files to delete"
                     ./mvnw clean install -DskipTests
-                    java -jar target\\Items-BE-0.0.1-SNAPSHOT.jar 
+                    cd target/
+                    java -jar Items-BE-0.0.1-SNAPSHOT.jar 
                     '''
                    
                 }
             }
         }
         
-        stage('Build and Run LegacyCode Backend') {
-            steps {
-                dir('LegacyCode') {
-                    bat '''
-                    set USERPROFILE=%USERPROFILE%
-                    del /Q target\\Items-BE-0.0.1-SNAPSHOT.jar || echo "No previous JAR files to delete"
-                    ./mvnw clean install -DskipTests
-                    java -jar target\\Items-BE-0.0.1-SNAPSHOT.jar 
-                    '''
-                    // Display the last lines of the log file to see if the application started successfully
+        // stage('Build and Run LegacyCode Backend') {
+        //     steps {
+        //         dir('LegacyCode') {
+        //             bat '''
+        //             set USERPROFILE=%USERPROFILE%
+        //             del /Q target\\Items-BE-0.0.1-SNAPSHOT.jar || echo "No previous JAR files to delete"
+        //             ./mvnw clean install -DskipTests
+        //             java -jar target\\Items-BE-0.0.1-SNAPSHOT.jar 
+        //             '''
+        //             // Display the last lines of the log file to see if the application started successfully
                     
-                }
-            }
-        }
+        //         }
+        //     }
+        // }
 
         
 
-        stage('Build and Run Security Backend') {
-            steps {
-                dir('Security') {
-                    bat '''
-                    set USERPROFILE=%USERPROFILE%
-                    set JAVA_HOME=%JAVA_HOME%
-                    del /Q target\\usersmanagementsystem-0.0.1-SNAPSHOT.jar || echo "No previous JAR files to delete"
-                    ./mvnw clean install -DskipTests
-                    java -jar target\\usersmanagementsystem-0.0.1-SNAPSHOT.jar 
-                    '''
+        // stage('Build and Run Security Backend') {
+        //     steps {
+        //         dir('Security') {
+        //             bat '''
+        //             set USERPROFILE=%USERPROFILE%
+        //             set JAVA_HOME=%JAVA_HOME%
+        //             del /Q target\\usersmanagementsystem-0.0.1-SNAPSHOT.jar || echo "No previous JAR files to delete"
+        //             ./mvnw clean install -DskipTests
+        //             java -jar target\\usersmanagementsystem-0.0.1-SNAPSHOT.jar 
+        //             '''
                     
-                }
-            }
-        }
+        //         }
+        //     }
+        // }
     }
 
     post {
