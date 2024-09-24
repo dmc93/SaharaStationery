@@ -2,21 +2,21 @@ pipeline {
     agent any
 
     environment {
-        // Set USERPROFILE and JAVA_HOME environment variables
-        USERPROFILE = "${env.USERPROFILE}" // Defaults to the current user's profile directory
-        JAVA_HOME = "C:\\Program Files\\Java\\jdk-17" // Update this path to your actual Java installation path
-        PATH = "${env.PATH};${env.JAVA_HOME}\\bin" // Adds the Java bin directory to PATH
+        // Set USERPROFILE environment variable to ensure PM2 uses the correct path on Windows
+        USERPROFILE = "${env.USERPROFILE}" // This defaults to the current user's profile directory
     }
 
     stages {
         stage('Checkout') {
             steps {
+                // Checkout the code from the Git repository
                 checkout scm
             }
         }
 
         stage('Install Frontend Dependencies') {
             steps {
+                // Navigate to the LegacyCodeFE directory and install dependencies
                 dir('LegacyCodeFE') {
                     bat '''
                     npm install
@@ -25,16 +25,9 @@ pipeline {
             }
         }
 
-       // stage('Delete pm2 instances') {
-       //     steps {
-       //         bat '''
-       //         pm2 delete all || echo "No PM2 processes running"
-       //         '''
-       //     }
-       // }
-
         stage('Run Frontend') {
             steps {
+                // Navigate to the LegacyCodeFE directory and start the frontend using PM2
                 dir('LegacyCodeFE') {
                     bat '''
                     pm2 start "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" -- start
@@ -43,49 +36,29 @@ pipeline {
             }
         }
 
-        stage('Build and Run LegacyCodeCart Backend') {
-            steps {
-                dir('LegacyCodeCart') {
-                    bat '''
-                    set USERPROFILE=%USERPROFILE%
-                    del /Q target\\Items-BE-0.0.1-SNAPSHOT.jar || echo "No previous JAR files to delete"
-                    ./mvnw clean install -DskipTests
-                    cd target/
-                    java -jar Items-BE-0.0.1-SNAPSHOT.jar 
-                    '''
-                   
-                }
-            }
-        }
-        
         // stage('Build and Run LegacyCode Backend') {
         //     steps {
+        //         // Navigate to LegacyCode and build Spring Boot application
         //         dir('LegacyCode') {
         //             bat '''
         //             set USERPROFILE=%USERPROFILE%
-        //             del /Q target\\Items-BE-0.0.1-SNAPSHOT.jar || echo "No previous JAR files to delete"
-        //             ./mvnw clean install -DskipTests
-        //             java -jar target\\Items-BE-0.0.1-SNAPSHOT.jar 
+        //             ./mvnw clean install
+        //             java -jar target\\*.jar
         //             '''
-        //             // Display the last lines of the log file to see if the application started successfully
-                    
         //         }
         //     }
         // }
 
-        
 
-        // stage('Build and Run Security Backend') {
+        // stage('Build and Run LegacyCodeCart Backend') {
         //     steps {
-        //         dir('Security') {
+        //         // Navigate to LegacyCodeCart and build Spring Boot application
+        //         dir('LegacyCodeCart') {
         //             bat '''
         //             set USERPROFILE=%USERPROFILE%
-        //             set JAVA_HOME=%JAVA_HOME%
-        //             del /Q target\\usersmanagementsystem-0.0.1-SNAPSHOT.jar || echo "No previous JAR files to delete"
-        //             ./mvnw clean install -DskipTests
-        //             java -jar target\\usersmanagementsystem-0.0.1-SNAPSHOT.jar 
+        //             ./mvnw clean install
+        //             java -jar target\\*.jar
         //             '''
-                    
         //         }
         //     }
         // }
@@ -93,9 +66,11 @@ pipeline {
 
     post {
         always {
+            // Output message to indicate the end of the pipeline
             echo 'Pipeline completed.'
         }
         failure {
+            // Output message in case of pipeline failure
             echo 'Build failed, please check logs.'
         }
     }
