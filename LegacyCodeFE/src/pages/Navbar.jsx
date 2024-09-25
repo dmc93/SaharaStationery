@@ -86,7 +86,8 @@ const Navbar = () => {
                     {isAdmin && <li className="nav-item">
                         <Link to="/product">Product</Link>
                     </li>}
-                    {isAdmin && <li className="nav-item">
+                    
+                    {/* {isAdmin && <li className="nav-item">
                         <Link to="/user-management">User</Link>
                     </li>}
                     {isAuthenticated && <li className="nav-item">
@@ -94,7 +95,7 @@ const Navbar = () => {
                     </li>}
                     {isAuthenticated && <li className="nav-item">
                         <Link to="/" onClick={handleLogout}>Logout</Link>
-                    </li>}
+                    </li>} */}
                 </ul>
             </div>
         </nav>
