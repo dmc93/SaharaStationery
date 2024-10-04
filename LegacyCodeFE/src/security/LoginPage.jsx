@@ -61,6 +61,7 @@ const handleSubmit = async (e) => {
     <h3>Use below details to login:</h3>
     <h5>Admin</h5>email: admin@sahara.com<br/>password: admin<br/>
     <h5>Non-Admin</h5>email: user1@sahara.com<br/>password: user1
+    <h3>Adding this line to test Auto Jenkins trigger upon committing this change in GitHub</h3>
 </div> 
 
         </div>
